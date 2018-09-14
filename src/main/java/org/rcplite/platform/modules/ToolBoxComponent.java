@@ -1,8 +1,9 @@
-package org.rcplite.platform.ui;
+package org.rcplite.platform.modules;
 
-import org.rcplite.platform.modules.Tool;
 import org.rcplite.platform.services.ShellService;
 import org.rcplite.platform.services.ToolsService;
+import org.rcplite.platform.windows.ActionCategory;
+import org.rcplite.platform.windows.ComponentPosition;
 import org.rcplite.platform.windows.ViewComponent;
 
 import javax.swing.*;
@@ -12,10 +13,21 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.Iterator;
 
-public class ToolBoxComponent extends JPanel {
+@ViewComponent.Configuration(
+        position = ComponentPosition.EXPLORER
+)
+
+@ViewComponent.Action(
+        category = ActionCategory.VIEW,
+        id= ToolBoxComponent.class
+)
+
+@ViewComponent.Menu(
+        path = "Tools/Toolbox"
+)
+public class ToolBoxComponent extends ViewComponent {
 	 JTree tree;
 
 	 public ToolBoxComponent() {

@@ -1,6 +1,4 @@
-package org.rcplite.platform.ui;
-
-import org.rcplite.platform.modules.Tool;
+package org.rcplite.platform.modules;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -19,9 +17,10 @@ public class ToolboxCellRenderer implements TreeCellRenderer {
         Object o = ((DefaultMutableTreeNode) value).getUserObject();
         if (o instanceof Tool) {
             Tool tool = (Tool) o;
-            Icon icon = tool.getIcon();
-            if (icon != null) {
-                label.setIcon(icon);
+            if (tool.getIcon() == null) {
+                label.setIcon(null);
+            }else{
+                label.setIcon(tool.getIcon());
             }
             label.setText(tool.getTitle());
         } else {

@@ -11,9 +11,10 @@ import net.infonode.docking.util.DockingUtil;
 import net.infonode.docking.util.PropertiesUtil;
 import net.infonode.docking.util.ViewMap;
 import net.infonode.util.Direction;
+import org.rcplite.platform.modules.ToolBoxComponent;
 import org.rcplite.platform.services.ComponentService;
 import org.rcplite.platform.spi.Shell;
-import org.rcplite.platform.ui.ToolBoxComponent;
+import org.rcplite.platform.spi.ShellConfiguration;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,21 +24,21 @@ import java.util.Iterator;
 
 public class PlatformShell extends AbstractShell implements Shell {
 
-	ToolBoxComponent toolBoxTree;
+    private PlatformShellConfiguration configuration = new PlatformShellConfiguration();
+	private TabWindow explorerWindow = new TabWindow();
+    private TabWindow documentsWindow = new TabWindow();
+    private TabWindow outputWindow = new TabWindow();
+    private TabWindow propertiesWindow = new TabWindow();
+	private RootWindow rootWindow;
+    private ViewMap rootViewMap;
 
-	TabWindow explorerWindow = new TabWindow();
-    TabWindow documentsWindow = new TabWindow();
-    TabWindow outputWindow = new TabWindow();
-    TabWindow propertiesWindow = new TabWindow();
-	RootWindow rootWindow;
-    ViewMap rootViewMap;
-
-    ArrayList<View> openDocumentViews;
-    ArrayList<View> openPropertyView;
-    ArrayList<View> openOutputViews;
-    ArrayList<View> openExplorerViews;
+    private ArrayList<View> openDocumentViews;
+    private ArrayList<View> openPropertyView;
+    private ArrayList<View> openOutputViews;
+    private ArrayList<View> openExplorerViews;
 
 	public PlatformShell() {
+	    configuration = new PlatformShellConfiguration();
         this.setTitle("NA Cyber Tools");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLayout(new BorderLayout());
@@ -96,11 +97,8 @@ public class PlatformShell extends AbstractShell implements Shell {
         openExplorerViews = new ArrayList<>();
         openOutputViews = new ArrayList<>();
 
-	    toolBoxTree = new ToolBoxComponent();
         rootViewMap = new ViewMap();
         rootWindow = DockingUtil.createRootWindow(rootViewMap, true);
-
-        explorerWindow.addTab(new View("Toolbox", null, toolBoxTree));
 
         SplitWindow explorerDocumentsSplit = new SplitWindow(true);
         explorerDocumentsSplit.setWindows(explorerWindow, documentsWindow);
@@ -134,12 +132,10 @@ public class PlatformShell extends AbstractShell implements Shell {
         while(views.hasNext()){
             Component v = views.next();
             if (v instanceof ViewComponent){
-
                 Class type = v.getClass();
                 ViewComponent.Configuration conf = (ViewComponent.Configuration) type.getAnnotation(ViewComponent.Configuration.class);
                 if(conf != null && conf.openOnStart()) {
                     addViewComponent((ViewComponent) v);
-                    System.out.println(v.getTitle() + " component hash:" + v.hashCode());
                 }
             }
         }
@@ -207,5 +203,19 @@ public class PlatformShell extends AbstractShell implements Shell {
                 addPropertyView(viewComponent.getView());
                 break;
         }
+    }
+
+    @Override
+    public void setConfiguration(ShellConfiguration conf) {
+	    if( conf instanceof  PlatformShellConfiguration)
+	        this.configuration = (PlatformShellConfiguration) conf;
+    }
+
+    @Override
+    public void launch(){
+	    if(configuration.showToolboxOnStartup()){
+            addViewComponent(new ToolBoxComponent());
+        }
+	    this.setVisible(true);
     }
 }

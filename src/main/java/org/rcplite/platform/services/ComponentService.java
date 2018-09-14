@@ -39,4 +39,14 @@ public class ComponentService {
         return components;
     }
 
+    public Component getComponent(Class clazz) {
+        while(getComponents().hasNext()){
+            Component next = getComponents().next();
+            if(next.getClass() == clazz){
+                return next;
+            }
+        }
+        return null;
+    }
+
 }

@@ -6,5 +6,4 @@ import javax.swing.*;
 
 public abstract class AbstractShell extends JFrame implements Shell {
 
-    public abstract  void addViewComponent(ViewComponent vc);
 }
