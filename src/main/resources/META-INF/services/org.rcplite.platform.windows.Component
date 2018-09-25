@@ -1,2 +1,2 @@
-org.rcplite.platform.ui.HtmlViewerComponent
-org.rcplite.platform.ui.LogComponent
+org.rcplite.platform.windows.HtmlViewerComponent
+org.rcplite.platform.windows.LogComponent

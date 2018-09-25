@@ -1,6 +1,6 @@
 package org.rcplite.platform.modules;
 
-import org.rcplite.platform.ui.Perspective;
+import org.rcplite.platform.windows.Perspective;
 
 import javax.swing.*;
 

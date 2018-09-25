@@ -1,6 +1,6 @@
 package org.rcplite.platform.lookup;
 
-import org.rcplite.platform.ui.LogComponent;
+import org.rcplite.platform.windows.LogComponent;
 
 public class InitialContext {
 

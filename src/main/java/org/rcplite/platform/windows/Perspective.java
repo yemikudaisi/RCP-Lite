@@ -1,6 +1,4 @@
-package org.rcplite.platform.ui;
-
-import org.rcplite.platform.windows.ViewComponent;
+package org.rcplite.platform.windows;
 
 import java.util.ArrayList;
 

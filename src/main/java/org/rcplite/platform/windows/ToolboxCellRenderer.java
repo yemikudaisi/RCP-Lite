@@ -1,9 +1,12 @@
-package org.rcplite.platform.modules;
+package org.rcplite.platform.windows;
+
+import org.rcplite.platform.modules.Tool;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
+import java.awt.Component;
 
 public class ToolboxCellRenderer implements TreeCellRenderer {
     private JLabel label;
@@ -26,6 +29,7 @@ public class ToolboxCellRenderer implements TreeCellRenderer {
         } else {
             label.setIcon(null);
             label.setText("" + value);
+            label.setBorder(BorderFactory.createEmptyBorder ( 4, 4, 4, 4 ));
         }
         return label;
     }

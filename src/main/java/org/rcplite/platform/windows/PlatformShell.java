@@ -11,7 +11,6 @@ import net.infonode.docking.util.DockingUtil;
 import net.infonode.docking.util.PropertiesUtil;
 import net.infonode.docking.util.ViewMap;
 import net.infonode.util.Direction;
-import org.rcplite.platform.modules.ToolBoxComponent;
 import org.rcplite.platform.services.ComponentService;
 import org.rcplite.platform.spi.Shell;
 import org.rcplite.platform.spi.ShellConfiguration;
@@ -110,7 +109,7 @@ public class PlatformShell extends AbstractShell implements Shell {
 
         SplitWindow mainSplit = new SplitWindow(false);
         mainSplit.setWindows(explorerDocumentsPropertiesSplit, outputWindow);
-        mainSplit.setDividerLocation(0.8f);
+        mainSplit.setDividerLocation(0.7f);
 
         rootWindow.setWindow(mainSplit);
 

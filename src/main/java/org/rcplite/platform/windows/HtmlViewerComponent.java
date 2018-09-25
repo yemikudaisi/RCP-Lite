@@ -1,8 +1,7 @@
-package org.rcplite.platform.ui;
+package org.rcplite.platform.windows;
 
 import org.rcplite.platform.services.LogService;
-import org.rcplite.platform.windows.ComponentPosition;
-import org.rcplite.platform.windows.ViewComponent;
+import org.rcplite.platform.spi.HtmlViewer;
 
 import javax.swing.*;
 import javax.swing.text.Document;
@@ -15,7 +14,15 @@ import java.awt.event.ActionListener;
 @ViewComponent.Configuration(
         position = ComponentPosition.DOCUMENT
 )
-public class HtmlViewerComponent extends ViewComponent {
+public class HtmlViewerComponent extends ViewComponent implements HtmlViewer {
+
+    String htmlString = "<html>\n"
+            + "<body>\n"
+            + "<h1>Welcome!</h1>\n"
+            + "<h2>This is an H2 header</h2>\n"
+            + "<p>This is some sample text</p>\n"
+            + "<p><a href=\"http://devdaily.com/blog/\">devdaily blog</a></p>\n"
+            + "</body>\n";
 
     public HtmlViewerComponent(){
         setTitle("HTML Viewer");
@@ -39,14 +46,6 @@ public class HtmlViewerComponent extends ViewComponent {
         styleSheet.addRule("h2 {color: #ff0000;}");
         styleSheet.addRule("pre {font : 10px monaco; color : black; background-color : #fafafa; }");
 
-        String htmlString = "<html>\n"
-                + "<body>\n"
-                + "<h1>Welcome!</h1>\n"
-                + "<h2>This is an H2 header</h2>\n"
-                + "<p>This is some sample text</p>\n"
-                + "<p><a href=\"http://devdaily.com/blog/\">devdaily blog</a></p>\n"
-                + "</body>\n";
-
         // create a document, set it on the jeditorpane, then add the html
         Document doc = kit.createDefaultDocument();
         jEditorPane.setDocument(doc);
@@ -57,10 +56,14 @@ public class HtmlViewerComponent extends ViewComponent {
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                LogService.getInstance().log("Testing the microphone");
+                LogService.instance().log("Testing the microphone");
             }
         });
         add(btn, BorderLayout.NORTH);
     }
 
+    @Override
+    public void view(String content) {
+        htmlString = content;
+    }
 }

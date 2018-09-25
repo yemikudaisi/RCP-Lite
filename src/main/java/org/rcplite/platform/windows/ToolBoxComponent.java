@@ -1,10 +1,8 @@
-package org.rcplite.platform.modules;
+package org.rcplite.platform.windows;
 
+import org.rcplite.platform.modules.Tool;
 import org.rcplite.platform.services.ShellService;
 import org.rcplite.platform.services.ToolsService;
-import org.rcplite.platform.windows.ActionCategory;
-import org.rcplite.platform.windows.ComponentPosition;
-import org.rcplite.platform.windows.ViewComponent;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -66,5 +64,6 @@ public class ToolBoxComponent extends ViewComponent {
              }
          };
          tree.addMouseListener(ml);
+         tree.setBorder(BorderFactory.createEmptyBorder(1,10,1,1));
 	 } 
 }

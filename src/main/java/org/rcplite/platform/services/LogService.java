@@ -1,9 +1,10 @@
 package org.rcplite.platform.services;
 
+import org.rcplite.platform.events.LogEvent;
+import org.rcplite.platform.logging.Log;
+import org.rcplite.platform.logging.LogType;
 import org.rcplite.platform.spi.Logger;
 
-import java.util.Iterator;
-import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
 public class LogService {
@@ -17,7 +18,7 @@ public class LogService {
     /**
      * Retrieve the singleton static instance of  LogService.
      */
-    public static LogService getInstance(){
+    public static LogService instance(){
         if(instance == null){
             instance = new LogService();
         }
@@ -29,16 +30,10 @@ public class LogService {
      * that contains the word.
      */
     public void log(String word) {
-        try {
-            Iterator<Logger> loggers = loader.iterator();
-            while (loggers.hasNext()) {
-                Logger l = loggers.next();
-                l.log(word);
-            }
-        } catch (ServiceConfigurationError serviceError) {
-            serviceError.printStackTrace();
-
-        }
+        EventService.getInstance().getAggregator().publish(new LogEvent(new Log(
+                LogType.INFO,
+                word
+        )));
     }
 
 }
