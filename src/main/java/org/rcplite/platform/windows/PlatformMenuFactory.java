@@ -2,9 +2,10 @@ package org.rcplite.platform.windows;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class MenuFactory {
+public class PlatformMenuFactory {
     static List<JMenu> menus = new ArrayList<>();
     static JMenuBar menuBar = new JMenuBar();
 
@@ -20,7 +21,7 @@ public class MenuFactory {
         return  newMenu;
     }
 
-    public static JMenuItem buildMenu(ArrayList<String> path){
+    public static JMenuItem buildMenus(ArrayList<String> path){
         if(path.isEmpty())
             throw new IllegalArgumentException("Menu path should be empty");
 
@@ -29,7 +30,12 @@ public class MenuFactory {
         return (path.isEmpty())? menu:buildMenuTree(menu, path);
     }
 
-    static JMenuItem buildMenuTree(JMenuItem parent, ArrayList<String> path){
+    public static JMenuItem buildMenusFromPath(String s){
+        String[] treeArr = s.split("/");
+        return buildMenus(new ArrayList<String>(Arrays.asList(treeArr)));
+    }
+
+    private static JMenuItem buildMenuTree(JMenuItem parent, ArrayList<String> path){
         if(path.size() == 1){
             JMenuItem item = new JMenuItem(path.get(0));
             parent.add(item);

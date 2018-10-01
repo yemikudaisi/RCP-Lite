@@ -11,9 +11,9 @@ import net.infonode.docking.util.DockingUtil;
 import net.infonode.docking.util.PropertiesUtil;
 import net.infonode.docking.util.ViewMap;
 import net.infonode.util.Direction;
+import org.rcplite.platform.config.PlatformShellConfiguration;
 import org.rcplite.platform.services.ComponentService;
 import org.rcplite.platform.spi.Shell;
-import org.rcplite.platform.spi.ShellConfiguration;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +23,7 @@ import java.util.Iterator;
 
 public class PlatformShell extends AbstractShell implements Shell {
 
-    private PlatformShellConfiguration configuration = new PlatformShellConfiguration();
+    private PlatformShellConfiguration configuration;
 	private TabWindow explorerWindow = new TabWindow();
     private TabWindow documentsWindow = new TabWindow();
     private TabWindow outputWindow = new TabWindow();
@@ -48,11 +48,19 @@ public class PlatformShell extends AbstractShell implements Shell {
 	}
 
 	private void initMenu(){
-        MenuFactory.addMenu("File");
-        MenuFactory.addMenu("Edit");
-        MenuFactory.addMenu("Tools");
-        MenuFactory.addMenu("Window");
-        MenuFactory.addMenu("Help");
+        PlatformMenuFactory.addMenu("File");
+        PlatformMenuFactory.addMenu("Edit");
+        PlatformMenuFactory.addMenu("Tools");
+        PlatformMenuFactory.addMenu("Window");
+        PlatformMenuFactory.addMenu("Help");
+
+        JMenuItem prefMenu = PlatformMenuFactory.buildMenusFromPath("Edit/Preferences");
+        prefMenu.addActionListener((e)->{
+            PreferenceDialog d = new PreferenceDialog(this);
+            d.setLocationRelativeTo(this);
+            d.setSize(640,480);
+            d.setVisible(true);
+        });
 
         Iterator<Component> views = ComponentService.getInstance().getComponents();
         while(views.hasNext()){
@@ -62,7 +70,7 @@ public class PlatformShell extends AbstractShell implements Shell {
             ViewComponent.Action action = (ViewComponent.Action) type.getAnnotation(ViewComponent.Action.class);
             if(menu != null && action != null) {
                 String[] treeArr = menu.path().split("/");
-                JMenuItem menuItem = MenuFactory.buildMenu(new ArrayList<String>(Arrays.asList(treeArr)));
+                JMenuItem menuItem = PlatformMenuFactory.buildMenus(new ArrayList<String>(Arrays.asList(treeArr)));
 
                 menuItem.addActionListener(e -> {
                     switch(action.category()){
@@ -86,7 +94,7 @@ public class PlatformShell extends AbstractShell implements Shell {
             }
         }
 
-        setJMenuBar(MenuFactory.getMenuBar());
+        setJMenuBar(PlatformMenuFactory.getMenuBar());
     }
 
     private void initUIComponents(){
@@ -205,7 +213,7 @@ public class PlatformShell extends AbstractShell implements Shell {
     }
 
     @Override
-    public void setConfiguration(ShellConfiguration conf) {
+    public void setConfiguration(PlatformShellConfiguration conf) {
 	    if( conf instanceof  PlatformShellConfiguration)
 	        this.configuration = (PlatformShellConfiguration) conf;
     }
@@ -214,6 +222,10 @@ public class PlatformShell extends AbstractShell implements Shell {
     public void launch(){
 	    if(configuration.showToolboxOnStartup()){
             addViewComponent(new ToolBoxComponent());
+        }
+
+        if (configuration.isMaximizeOnStartup()){
+            setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         }
 	    this.setVisible(true);
     }

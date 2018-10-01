@@ -29,6 +29,7 @@ public class ToolBoxComponent extends ViewComponent {
 	 JTree tree;
 
 	 public ToolBoxComponent() {
+	     setTitle("Toolbox");
 		 DefaultMutableTreeNode root = new DefaultMutableTreeNode("Tools");
          Iterator<Tool> tools = ToolsService.getInstance().getAll();
          while(tools.hasNext()){
