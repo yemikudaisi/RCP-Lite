@@ -15,6 +15,8 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 @ViewComponent.Configuration(
 		position = ComponentPosition.OUTPUT,
@@ -57,7 +59,9 @@ public class LogComponent extends ViewComponent implements Logger {
 	}
 
     public void log(Log l) {
-        log(l.getType().name()+": "+l.getMessage());
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        log(sdf.format(cal.getTime()) +" :\t"+l.getType().name()+" : \t"+l.getMessage());
     }
 
 	@EventHandler

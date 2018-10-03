@@ -16,6 +16,7 @@ public class GeneralPreference extends PlatformPreference {
 
     public GeneralPreference(){
         setLayout(new BorderLayout());
+        setTitle("Basic");
         add(new JLabel("Basic Preference"), BorderLayout.CENTER);
     }
 

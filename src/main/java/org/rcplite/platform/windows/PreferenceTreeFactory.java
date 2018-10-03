@@ -1,5 +1,7 @@
 package org.rcplite.platform.windows;
 
+import org.rcplite.platform.spi.Preference;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -11,6 +13,7 @@ public class PreferenceTreeFactory {
     static List<DefaultMutableTreeNode> nodes = new ArrayList<>();
     static DefaultMutableTreeNode root = new DefaultMutableTreeNode("Preferences");
     static JTree tree = new JTree(root);
+    static Preference nodeObject;
 
     public static DefaultMutableTreeNode addTreeNode(String text){
         for(DefaultMutableTreeNode node: nodes){
@@ -24,10 +27,11 @@ public class PreferenceTreeFactory {
         return  newNode;
     }
 
-    public static DefaultMutableTreeNode buildNode(ArrayList<String> path){
+    public static DefaultMutableTreeNode buildNode(ArrayList<String> path, Preference p){
         if(path.isEmpty())
             throw new IllegalArgumentException("Menu path should be empty");
 
+        nodeObject = p;
         DefaultMutableTreeNode node = addTreeNode(path.get(0));
         path.remove(0);
         return (path.isEmpty())? node :buildNodeTree(node, path);
@@ -35,6 +39,7 @@ public class PreferenceTreeFactory {
 
     static DefaultMutableTreeNode buildNodeTree(DefaultMutableTreeNode parent, ArrayList<String> path){
         if(path.size() == 0){
+            parent.setUserObject(nodeObject);
             return parent;
         }
 
