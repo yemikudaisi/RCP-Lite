@@ -48,6 +48,7 @@ public class PlatformShell extends AbstractShell implements Shell {
 	}
 
 	private void initMenu(){
+
         PlatformMenuFactory.addMenu("File");
         PlatformMenuFactory.addMenu("Edit");
         PlatformMenuFactory.addMenu("Tools");
@@ -215,7 +216,7 @@ public class PlatformShell extends AbstractShell implements Shell {
     @Override
     public void setConfiguration(PlatformShellConfiguration conf) {
 	    if( conf instanceof  PlatformShellConfiguration)
-	        this.configuration = (PlatformShellConfiguration) conf;
+	        this.configuration = conf;
     }
 
     @Override
