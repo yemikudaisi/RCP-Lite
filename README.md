@@ -1,8 +1,9 @@
 # RCP-Lite
+A minimalistic Rich Client Platform inspired by Netbeans Platform
 
 ## Usage
 
-### Gradle
+## Gradle
 #### Add jitpack repository
     repositories {
         maven { url "https://jitpack.io" }
@@ -14,7 +15,7 @@
         annotationProcessor 'com.github.yemikudaisi:RCP-Lite:master-SNAPSHOT'
     }
    
-### Maven
+## Maven
 #### Add jitpack repository
     <repositories>
 		    <repository>
@@ -29,3 +30,6 @@
 	      <artifactId>RCP-Lite</artifactId>
 	      <version>master-SNAPSHOT</version>
 	  </dependency>
+
+## License
+[MIT License](https://opensource.org/licenses/MIT)
