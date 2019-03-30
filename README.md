@@ -1,4 +1,4 @@
-# RCP-Lite
+# RCP Lite
 A minimalistic Rich Client Platform inspired by Netbeans Platform
 
 ![Screenshot - RCP Lite Demo](doc/images/1.png)
@@ -113,7 +113,7 @@ Components can be position in on of 4 places:
 - Property (Right)
 - Output (Bottom)
 
-![RCP Lite - Component position](doc/images/3.png)
+![RCP Lite - Component position](doc/images/3.PNG)
 
 To diplay a Component as an explorer component, add the following annotation above the class
 ```java
