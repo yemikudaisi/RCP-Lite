@@ -37,7 +37,7 @@ public class PlatformShell extends AbstractShell implements Shell {
     private ArrayList<View> openExplorerViews;
 
 	public PlatformShell() {
-        this.setTitle(this.configuration.getTitle());
+        this.setTitle(PlatformShellConfiguration.getDefaultConfig().getTitle());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLayout(new BorderLayout());
 
