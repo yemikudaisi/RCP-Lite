@@ -37,8 +37,7 @@ public class PlatformShell extends AbstractShell implements Shell {
     private ArrayList<View> openExplorerViews;
 
 	public PlatformShell() {
-	    configuration = new PlatformShellConfiguration();
-        this.setTitle("NA Cyber Tools");
+        this.setTitle(this.configuration.getTitle());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLayout(new BorderLayout());
 

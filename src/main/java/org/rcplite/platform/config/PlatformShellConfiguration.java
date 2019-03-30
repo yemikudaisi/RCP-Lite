@@ -4,6 +4,7 @@ public class PlatformShellConfiguration {
 
     private boolean showToolboxOnStartup = false;
     private boolean maximizeOnStartup = false;
+    private String title = "RCP Lite";
 
     public PlatformShellConfiguration setShowToolboxOnStartup(boolean value){
         showToolboxOnStartup = value;
@@ -21,5 +22,13 @@ public class PlatformShellConfiguration {
     public PlatformShellConfiguration setMaximizeOnStartup(boolean maximizeOnStartup) {
         this.maximizeOnStartup = maximizeOnStartup;
         return this;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
