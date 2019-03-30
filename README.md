@@ -107,7 +107,7 @@ public class FooDocumentComponent extends ViewComponent {
 }
 ```
 #### Component positions
-Components can be position in on of 4 places:
+Components can be position in one of 4 places:
 - Document (Center)
 - Explorer (Left)
 - Property (Right)
