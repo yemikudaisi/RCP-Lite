@@ -1,5 +1,5 @@
 # RCP Lite
-A minimalistic Rich Client Platform inspired by Netbeans Platform
+A minimalist Rich Client Platform inspired by Netbeans Platform
 
 ![Screenshot - RCP Lite Demo](doc/images/1.png)
 
