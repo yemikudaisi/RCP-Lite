@@ -4,3 +4,7 @@ build/
 out/
 .gradle/
 *.iml
+/target/
+*.classpath
+*.project
+.settings/

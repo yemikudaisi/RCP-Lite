@@ -1,8 +1,6 @@
 package org.rcplite.platform.windows;
 
 import net.miginfocom.swing.MigLayout;
-import org.kordamp.ikonli.feather.Feather;
-import org.kordamp.ikonli.swing.FontIcon;
 import org.rcplite.platform.events.EventHandler;
 import org.rcplite.platform.events.LogEvent;
 import org.rcplite.platform.logging.Log;
@@ -20,7 +18,14 @@ import java.util.Calendar;
 
 @ViewComponent.Configuration(
 		position = ComponentPosition.OUTPUT,
-		openOnStart = true
+		openOnStart = false
+)
+@ViewComponent.Action(
+        category = ActionCategory.VIEW,
+        id= LogComponent.class
+)
+@ViewComponent.Menu(
+        path = "Window/Show View/Log"
 )
 public class LogComponent extends ViewComponent implements Logger {
 	JTextPane logTextPane;
@@ -37,7 +42,7 @@ public class LogComponent extends ViewComponent implements Logger {
 
 	public void initUIComponents(){
         JScrollPane jsp = new JScrollPane(logTextPane);
-        clearButton = new JButton(FontIcon.of(Feather.FTH_TRASH, 16,new Color(0XAFB1B3)));
+        clearButton = new JButton("Clear");
         clearButton.setMargin(new Insets(1,1,1,1));
         //clearButton.setSize(new Dimension(14,14));
         clearButton.setToolTipText("Clear log");

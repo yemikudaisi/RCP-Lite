@@ -6,7 +6,7 @@ import java.net.URL;
 
 public class ImageManager {
 
-    public static Icon getImageIcon(String path){
+    public static ImageIcon getImageIcon(String path){
         URL url = ImageManager.class.getResource(path);
         if (url != null) {
             return new ImageIcon(url);

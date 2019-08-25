@@ -1,5 +1,8 @@
 package org.rcplite.platform.windows;
 
+import net.infonode.docking.DockingWindow;
+import net.infonode.docking.DockingWindowListener;
+import net.infonode.docking.OperationAbortedException;
 import net.infonode.docking.RootWindow;
 import net.infonode.docking.SplitWindow;
 import net.infonode.docking.TabWindow;
@@ -54,23 +57,24 @@ public class PlatformShell extends AbstractShell implements Shell {
         PlatformMenuFactory.addMenu("Window");
         PlatformMenuFactory.addMenu("Help");
 
-        JMenuItem prefMenu = PlatformMenuFactory.buildMenusFromPath("Edit/Preferences");
+        JMenuItem prefMenu = PlatformMenuFactory.buildMenusFromPath("Edit/Preferences",null);
         prefMenu.addActionListener((e)->{
             PreferenceDialog d = new PreferenceDialog(this);
             d.setLocationRelativeTo(this);
             d.setSize(640,480);
             d.setVisible(true);
         });
-
+        
+        // Get view components from components service
         Iterator<Component> views = ComponentService.getInstance().getComponents();
         while(views.hasNext()){
             Component v = views.next();
             Class type = v.getClass();
-            ViewComponent.Menu menu = (ViewComponent.Menu) type.getAnnotation(ViewComponent.Menu.class);
-            ViewComponent.Action action = (ViewComponent.Action) type.getAnnotation(ViewComponent.Action.class);
+            ViewComponent.Menu menu = (ViewComponent.Menu) type.getAnnotation(ViewComponent.Menu.class); // Get menu for component
+            ViewComponent.Action action = (ViewComponent.Action) type.getAnnotation(ViewComponent.Action.class); // Get action for component
             if(menu != null && action != null) {
                 String[] treeArr = menu.path().split("/");
-                JMenuItem menuItem = PlatformMenuFactory.buildMenus(new ArrayList<String>(Arrays.asList(treeArr)));
+                JMenuItem menuItem = PlatformMenuFactory.buildMenus(new ArrayList<String>(Arrays.asList(treeArr)), v.getIcon());
 
                 menuItem.addActionListener(e -> {
                     switch(action.category()){
@@ -98,6 +102,9 @@ public class PlatformShell extends AbstractShell implements Shell {
     }
 
     private void initUIComponents(){
+    	propertiesWindow.addListener(new TabWindowListener());
+    	outputWindow.addListener(new TabWindowListener());
+    	explorerWindow.addListener(new TabWindowListener());
 
         openDocumentViews = new ArrayList<>();
         openPropertyView = new ArrayList<>();
@@ -151,7 +158,7 @@ public class PlatformShell extends AbstractShell implements Shell {
     private void addPropertyView(View v){
         for(View p: openPropertyView){
             if(p.getTitle().equalsIgnoreCase(v.getTitle()) ){
-                v.restoreFocus();
+                v.restore();
                 return;
             }
         }
@@ -162,7 +169,7 @@ public class PlatformShell extends AbstractShell implements Shell {
     private void addDocumentView(View view) {
         for(View doc: openDocumentViews){
             if(doc.getTitle().equalsIgnoreCase(view.getTitle()) ){
-                doc.restoreFocus();
+                doc.restore();
                 return;
             }
         }
@@ -173,7 +180,7 @@ public class PlatformShell extends AbstractShell implements Shell {
     private void addExplorerView(View view) {
         for(View doc: openExplorerViews){
             if(doc.getTitle().equalsIgnoreCase(view.getTitle()) ){
-                doc.restoreFocus();
+                doc.restore();
                 return;
             }
         }
@@ -184,7 +191,7 @@ public class PlatformShell extends AbstractShell implements Shell {
     private void addOutputView(View view) {
         for(View doc: openOutputViews){
             if(doc.getTitle().equalsIgnoreCase(view.getTitle()) ){
-                doc.restoreFocus();
+                doc.restore();
                 return;
             }
         }

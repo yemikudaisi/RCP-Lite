@@ -50,7 +50,7 @@ import java.util.*;
 /**
  * @author Kohsuke Kawaguchi
  */
-@SuppressWarnings({"Since15"})
+
 @SupportedAnnotationTypes(
         {"org.rcplite.platform.processing.ServiceProvider"}
 )

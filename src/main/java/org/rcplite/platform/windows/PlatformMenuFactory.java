@@ -21,30 +21,32 @@ public class PlatformMenuFactory {
         return  newMenu;
     }
 
-    public static JMenuItem buildMenus(ArrayList<String> path){
+    public static JMenuItem buildMenus(ArrayList<String> path, Icon icon){
         if(path.isEmpty())
             throw new IllegalArgumentException("Menu path should be empty");
 
         JMenu menu = addMenu(path.get(0));
         path.remove(0);
-        return (path.isEmpty())? menu:buildMenuTree(menu, path);
+        return (path.isEmpty())? menu:buildMenuTree(menu, path, icon);
     }
 
-    public static JMenuItem buildMenusFromPath(String s){
+    public static JMenuItem buildMenusFromPath(String s, Icon icon){
         String[] treeArr = s.split("/");
-        return buildMenus(new ArrayList<String>(Arrays.asList(treeArr)));
+        return buildMenus(new ArrayList<String>(Arrays.asList(treeArr)),icon);
     }
 
-    private static JMenuItem buildMenuTree(JMenuItem parent, ArrayList<String> path){
+    private static JMenuItem buildMenuTree(JMenuItem parent, ArrayList<String> path, Icon icon){
         if(path.size() == 1){
             JMenuItem item = new JMenuItem(path.get(0));
+            if(icon != null)
+            	item.setIcon(icon);
             parent.add(item);
             return  item;
         }else{
             JMenu otherParent = new JMenu(path.get(0));
             path.remove(0);
             ((JMenu) parent).add(otherParent);
-            return buildMenuTree(otherParent, path);
+            return buildMenuTree(otherParent, path,icon);
         }
     }
 

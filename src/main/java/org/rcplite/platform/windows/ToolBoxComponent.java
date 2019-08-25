@@ -23,7 +23,7 @@ import java.util.Iterator;
 )
 
 @ViewComponent.Menu(
-        path = "Tools/Toolbox"
+        path = "Window/Show View/Toolbox"
 )
 public class ToolBoxComponent extends ViewComponent {
 	 JTree tree;

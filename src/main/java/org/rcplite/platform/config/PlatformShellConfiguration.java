@@ -3,11 +3,17 @@ package org.rcplite.platform.config;
 public class PlatformShellConfiguration {
 
     private boolean showToolboxOnStartup = false;
+    private boolean showLogOnStartup = false;
     private boolean maximizeOnStartup = false;
     private String title;
 
     public PlatformShellConfiguration setShowToolboxOnStartup(boolean value){
         showToolboxOnStartup = value;
+        return this;
+    }
+    
+    public PlatformShellConfiguration setShowLogOnStartup(boolean value){
+        showLogOnStartup = value;
         return this;
     }
 
@@ -16,8 +22,13 @@ public class PlatformShellConfiguration {
         config.setTitle("RCP Lite");
         return config;
     }
+    
     public boolean showToolboxOnStartup() {
         return showToolboxOnStartup;
+    }
+    
+    public boolean showLogOnStartup() {
+        return showLogOnStartup;
     }
 
     public boolean isMaximizeOnStartup() {
