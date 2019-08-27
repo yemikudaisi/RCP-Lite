@@ -9,7 +9,7 @@ public class TabWindowListener implements DockingWindowListener {
 
 	@Override
 	public void windowAdded(DockingWindow addedToWindow, DockingWindow addedWindow) {
-		// TODO Auto-generated method stub
+		addedToWindow.restore();
 		
 	}
 

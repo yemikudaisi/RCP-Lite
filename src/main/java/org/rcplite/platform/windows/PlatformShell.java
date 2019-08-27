@@ -1,8 +1,16 @@
 package org.rcplite.platform.windows;
 
-import net.infonode.docking.DockingWindow;
-import net.infonode.docking.DockingWindowListener;
-import net.infonode.docking.OperationAbortedException;
+import java.awt.BorderLayout;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+
+import javax.swing.JMenuItem;
+
+import org.rcplite.platform.config.PlatformShellConfiguration;
+import org.rcplite.platform.services.ComponentService;
+import org.rcplite.platform.spi.Shell;
+
 import net.infonode.docking.RootWindow;
 import net.infonode.docking.SplitWindow;
 import net.infonode.docking.TabWindow;
@@ -14,19 +22,9 @@ import net.infonode.docking.util.DockingUtil;
 import net.infonode.docking.util.PropertiesUtil;
 import net.infonode.docking.util.ViewMap;
 import net.infonode.util.Direction;
-import org.rcplite.platform.config.PlatformShellConfiguration;
-import org.rcplite.platform.services.ComponentService;
-import org.rcplite.platform.spi.Shell;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+public class PlatformShell extends AbstractShell {
 
-public class PlatformShell extends AbstractShell implements Shell {
-
-    private PlatformShellConfiguration configuration;
 	private TabWindow explorerWindow = new TabWindow();
     private TabWindow documentsWindow = new TabWindow();
     private TabWindow outputWindow = new TabWindow();
@@ -102,6 +100,7 @@ public class PlatformShell extends AbstractShell implements Shell {
     }
 
     private void initUIComponents(){
+    	
     	propertiesWindow.addListener(new TabWindowListener());
     	outputWindow.addListener(new TabWindowListener());
     	explorerWindow.addListener(new TabWindowListener());
@@ -134,6 +133,7 @@ public class PlatformShell extends AbstractShell implements Shell {
 
         rootWindow.getRootWindowProperties().addSuperObject(
                 theme.getRootWindowProperties());
+        
 
         //rootWindow.getRootWindowProperties().addSuperObject(titleBarStyleProperties);
 
@@ -219,19 +219,14 @@ public class PlatformShell extends AbstractShell implements Shell {
         }
     }
 
-    @Override
-    public void setConfiguration(PlatformShellConfiguration conf) {
-	    if( conf instanceof  PlatformShellConfiguration)
-	        this.configuration = conf;
-    }
 
     @Override
     public void launch(){
-	    if(configuration.showToolboxOnStartup()){
+	    if(getConfiguration().showToolboxOnStartup()){
             addViewComponent(new ToolBoxComponent());
         }
 
-        if (configuration.isMaximizeOnStartup()){
+        if (getConfiguration().isMaximizeOnStartup()){
             setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         }
 	    this.setVisible(true);
