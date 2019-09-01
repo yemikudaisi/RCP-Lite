@@ -4,8 +4,6 @@ import org.rcplite.core.spi.Preference;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
 import java.util.ArrayList;
 import java.util.List;
 

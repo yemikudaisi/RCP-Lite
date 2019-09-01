@@ -1,16 +1,28 @@
 package org.rcplite.core.windows;
 
+import static org.rcplite.core.Application.getInjector;
+
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import org.rcplite.api.windows.Component;
-import org.rcplite.core.Application;
+import org.rcplite.api.windows.StatusBar;
 import org.rcplite.core.config.PlatformShellConfiguration;
+import org.rcplite.core.windows.controls.AbstractStatusBar;
+import org.rcplite.core.windows.controls.ShellStatusBar;
 
 import com.google.inject.Inject;
 
@@ -18,16 +30,21 @@ import net.infonode.docking.RootWindow;
 import net.infonode.docking.SplitWindow;
 import net.infonode.docking.TabWindow;
 import net.infonode.docking.View;
-import net.infonode.docking.properties.RootWindowProperties;
+import net.infonode.docking.properties.DockingWindowProperties;
 import net.infonode.docking.theme.ClassicDockingTheme;
 import net.infonode.docking.theme.DockingWindowsTheme;
 import net.infonode.docking.util.DockingUtil;
-import net.infonode.docking.util.PropertiesUtil;
 import net.infonode.docking.util.ViewMap;
 import net.infonode.util.Direction;
 
+@SuppressWarnings("serial")
 public class PlatformShell extends AbstractShell {
 
+	public final static String DOCUMENTS_WINDOW_NAME = "windows.documents";
+	public final static String EXPLORERS_WINDOW_NAME = "windows.explorer";
+	public final static String PROPERTIES_WINDOW_NAME = "windows.properties";
+	public final static String OUTPUT_WINDOW_NAME = "windows.outputs";
+	
 	private TabWindow explorerWindow = new TabWindow();
     private TabWindow documentsWindow = new TabWindow();
     private TabWindow outputWindow = new TabWindow();
@@ -39,21 +56,28 @@ public class PlatformShell extends AbstractShell {
     private ArrayList<View> openPropertyView;
     private ArrayList<View> openOutputViews;
     private ArrayList<View> openExplorerViews;
-    private Set<Component> components;
+    private Set<Component> components;    
+    StatusBar statusBar;
 
-	@Inject public PlatformShell(Set<Component> components) {
+	@Inject public PlatformShell(Set<Component> components, StatusBar statusBar) {
 		this.components = components;
+		this.statusBar = statusBar;
         this.setTitle(PlatformShellConfiguration.getDefaultConfig().getTitle());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLayout(new BorderLayout());
 
 		initUIComponents();
         initMenu();
+        initStatusBar();
 		setSize(900, 700);
+	}
+	
+	private void initStatusBar() {
+		JComponent panel = statusBar.getComponent();
+		add(panel,BorderLayout.SOUTH);
 	}
 
 	private void initMenu(){
-
         PlatformMenuFactory.addMenu("File");
         PlatformMenuFactory.addMenu("Edit");
         PlatformMenuFactory.addMenu("Tools");
@@ -82,12 +106,15 @@ public class PlatformShell extends AbstractShell {
                 menuItem.addActionListener(e -> {
                     switch(action.category()){
                         case VIEW:
-                            //Object obj = action.id().newInstance();
-                        	Object obj = Application.getInjector().getInstance(action.id());
+                        	Object obj = getInjector().getInstance(action.id());
                             if(obj instanceof ViewComponent){
                                 this.addViewComponent((ViewComponent)obj);
                             }
                             break;
+					case PERSPECTIVE:
+						break;
+					default:
+						break;
                     }
                 });
                 switch (action.category()){
@@ -98,12 +125,24 @@ public class PlatformShell extends AbstractShell {
 
         setJMenuBar(PlatformMenuFactory.getMenuBar());
     }
-
+	
     private void initUIComponents(){
+    	TabWindowListener listener = new TabWindowListener(
+    			PROPERTIES_WINDOW_NAME,
+    			OUTPUT_WINDOW_NAME,
+    			EXPLORERS_WINDOW_NAME);
     	
-    	propertiesWindow.addListener(new TabWindowListener());
-    	outputWindow.addListener(new TabWindowListener());
-    	explorerWindow.addListener(new TabWindowListener());
+    	propertiesWindow.addListener(listener);
+    	propertiesWindow.setName(PlatformShell.PROPERTIES_WINDOW_NAME);
+    	
+    	outputWindow.addListener(listener);
+    	outputWindow.setName(PlatformShell.OUTPUT_WINDOW_NAME);
+    	
+    	explorerWindow.addListener(listener);
+    	explorerWindow.setName(PlatformShell.EXPLORERS_WINDOW_NAME);
+    	
+    	documentsWindow.getWindowProperties().setCloseEnabled(false);
+    	documentsWindow.setName(PlatformShell.DOCUMENTS_WINDOW_NAME);
 
         openDocumentViews = new ArrayList<>();
         openPropertyView = new ArrayList<>();
@@ -129,27 +168,28 @@ public class PlatformShell extends AbstractShell {
 
         DockingWindowsTheme theme = new ClassicDockingTheme();
         rootWindow.getWindowBar(Direction.DOWN).setEnabled(true);
-        RootWindowProperties titleBarStyleProperties = PropertiesUtil.createTitleBarStyleRootWindowProperties();
 
         rootWindow.getRootWindowProperties().addSuperObject(
                 theme.getRootWindowProperties());
-        
 
-        //rootWindow.getRootWindowProperties().addSuperObject(titleBarStyleProperties);
-
-        getContentPane().add(rootWindow, BorderLayout.CENTER);
+        add(rootWindow, BorderLayout.CENTER);
         loadComponents();
     }
 
     private void loadComponents(){
+    	
+    	propertiesWindow.close(); // FIXME properties window not closing
+    	
         Iterator<Component> views = components.iterator();
         while(views.hasNext()){
             Component v = views.next();
             if (v instanceof ViewComponent){
                 Class type = v.getClass();
                 ViewComponent.Configuration conf = (ViewComponent.Configuration) type.getAnnotation(ViewComponent.Configuration.class);
+                ViewComponent viewComponent = (ViewComponent) v;
+                
                 if(conf != null && conf.openOnStart()) {
-                    addViewComponent((ViewComponent) v);
+                	addViewComponent(viewComponent);
                 }
             }
         }
@@ -167,6 +207,7 @@ public class PlatformShell extends AbstractShell {
     }
 
     private void addDocumentView(View view) {
+    	documentsWindow.restore();
         for(View doc: openDocumentViews){
             if(doc.getTitle().equalsIgnoreCase(view.getTitle()) ){
                 doc.restore();
@@ -178,6 +219,7 @@ public class PlatformShell extends AbstractShell {
     }
 
     private void addExplorerView(View view) {
+    	explorerWindow.restore();
         for(View doc: openExplorerViews){
             if(doc.getTitle().equalsIgnoreCase(view.getTitle()) ){
                 doc.restore();
@@ -189,6 +231,7 @@ public class PlatformShell extends AbstractShell {
     }
 
     private void addOutputView(View view) {
+    	outputWindow.restore();
         for(View doc: openOutputViews){
             if(doc.getTitle().equalsIgnoreCase(view.getTitle()) ){
                 doc.restore();
@@ -203,18 +246,28 @@ public class PlatformShell extends AbstractShell {
     public void addViewComponent(Component viewComponent) {
         Class type = viewComponent.getClass();
         ViewComponent.Configuration conf = (ViewComponent.Configuration) type.getAnnotation(ViewComponent.Configuration.class);
+        View view = viewComponent.getView();
+        
+        // Assign view properties
+        view.getWindowProperties().setCloseEnabled(conf.closable());
+        view.getWindowProperties().setMinimizeEnabled(conf.minimizable());
+        view.getWindowProperties().setMaximizeEnabled(conf.maximizable());
+        view.getWindowProperties().setRestoreEnabled(conf.restorable());
+        view.getWindowProperties().setDockEnabled(conf.dockable());
+        view.getWindowProperties().setDragEnabled(conf.dragable());
+        
         switch (conf.position()){
             case DOCUMENT:
-                addDocumentView(viewComponent.getView());
+                addDocumentView(view);
                 break;
             case OUTPUT:
-                addOutputView(viewComponent.getView());
+                addOutputView(view);
                 break;
             case EXPLORER:
-                addExplorerView(viewComponent.getView());
+                addExplorerView(view);
                 break;
             case PROPERTY:
-                addPropertyView(viewComponent.getView());
+                addPropertyView(view);
                 break;
         }
     }
@@ -229,6 +282,8 @@ public class PlatformShell extends AbstractShell {
         if (getConfiguration().isMaximizeOnStartup()){
             setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         }
+        
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	    this.setVisible(true);
     }
 

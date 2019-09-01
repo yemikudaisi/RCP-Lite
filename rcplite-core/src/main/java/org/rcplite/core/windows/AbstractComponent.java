@@ -21,6 +21,7 @@ public abstract class AbstractComponent extends JComponent implements Component 
 
     protected void setTitle(String title){
         this.title = title;
+        getView().setName(title);
     }
 
     protected void setIcon(Icon i){

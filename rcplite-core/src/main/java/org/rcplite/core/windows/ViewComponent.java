@@ -10,6 +10,12 @@ public class ViewComponent extends AbstractComponent {
     public @interface Configuration{
         ComponentPosition position() default ComponentPosition.DOCUMENT;
         boolean openOnStart() default false;
+        boolean closable() default true;
+        boolean minimizable() default true;
+        boolean maximizable() default true;
+        boolean restorable() default true;
+        boolean dockable() default true;
+        boolean dragable() default true;
     }
 
     @Documented

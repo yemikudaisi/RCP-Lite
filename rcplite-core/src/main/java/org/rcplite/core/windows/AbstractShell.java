@@ -6,6 +6,7 @@ import org.rcplite.core.config.PlatformShellConfiguration;
 
 import javax.swing.*;
 
+@SuppressWarnings("serial")
 public abstract class AbstractShell extends JFrame implements Shell {
     private ShellConfiguration configuration;
     
