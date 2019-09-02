@@ -25,7 +25,6 @@ public class WrapLayout extends FlowLayout
 	/** Constant that specifies alignment to trailing edge of container's */
 	public static final int TRAILING = 4;
 	
-	private Dimension preferredLayoutSize;
 
 	/**
 	* Constructs a new <code>WrapLayout</code> with a left
