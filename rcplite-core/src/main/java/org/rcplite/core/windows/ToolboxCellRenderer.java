@@ -5,7 +5,6 @@ import org.rcplite.core.modules.Tool;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
-import java.awt.*;
 import java.awt.Component;
 
 public class ToolboxCellRenderer implements TreeCellRenderer {

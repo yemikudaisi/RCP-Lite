@@ -23,26 +23,21 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
 import org.rcplite.api.windows.PopupMenuProvider;
-import org.rcplite.api.windows.StatusBar;
 import org.rcplite.api.windows.StatusBarItem;
 import org.rcplite.core.utils.ImageManager;
 import org.rcplite.core.windows.dialog.AbstractSimpleDialog;
@@ -74,7 +69,7 @@ public class ShellStatusBar extends AbstractStatusBar {
     private static final int INSET = 0;
 
     // Package-private constants for use by StatusBarItem classes
-    public static final Font DEFAULT_FONT = new Font("Courier", Font.PLAIN, 12);
+    public static final Font DEFAULT_FONT = new Font("Courier", Font.PLAIN, 10);
     public static final int DEFAULT_NUM_DECIMAL_DIGITS = 2;
 
     private int numDecimalDigits = DEFAULT_NUM_DECIMAL_DIGITS;
@@ -118,12 +113,10 @@ public class ShellStatusBar extends AbstractStatusBar {
 
         setLayout(new MigLayout("insets " + INSET));
         setBackground(new Color(224, 224, 224));
-        setFont(DEFAULT_FONT);
-        setBorder(new CompoundBorder(new LineBorder(Color.DARK_GRAY),
-		        new EmptyBorder(4, 4, 4, 4)));
+        //setFont(DEFAULT_FONT);
 
 
-        ImageIcon icon = ImageManager.getImageIcon("/images/icons8-settings-16.png");
+        ImageIcon icon = ImageManager.getImageIcon("/images/icons8-menu-16.png");
         PopupMenuProvider menuProvider =
                 new PopupMenuProvider() {
                     @Override
