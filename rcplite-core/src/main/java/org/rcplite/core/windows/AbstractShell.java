@@ -2,8 +2,6 @@ package org.rcplite.core.windows;
 
 import org.rcplite.api.windows.Shell;
 import org.rcplite.api.windows.ShellConfiguration;
-import org.rcplite.core.config.PlatformShellConfiguration;
-
 import javax.swing.*;
 
 @SuppressWarnings("serial")
@@ -14,8 +12,7 @@ public abstract class AbstractShell extends JFrame implements Shell {
 
     @Override
     public void setConfiguration(ShellConfiguration conf) {
-	    if( conf instanceof  PlatformShellConfiguration)
-	        this.configuration = conf;
+        this.configuration = conf;
     }
     
     public ShellConfiguration getConfiguration() {

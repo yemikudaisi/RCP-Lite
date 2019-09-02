@@ -17,15 +17,13 @@ import com.google.inject.Module;
 public class Application {
 
 	private static Injector injector;
-
-	public static Injector getInjector() {
-		return injector;
-	}
+	private ShellConfiguration config;
 
 	public Application() {
+		this(null);		
 	}
-
-	public void start() {
+	
+	public Application(ShellConfiguration config) {
 		List<Module> moduleList = new ArrayList<Module>();
 		moduleList.add(new PlatformModule());
 		
@@ -34,10 +32,24 @@ public class Application {
 			moduleList.add(ext);
 		}
 		injector = Guice.createInjector(moduleList);
-
-		ShellConfiguration config = injector.getInstance(ShellConfiguration.class);
-		config.setShowToolboxOnStartup(false).setTitle("RCP Lite").setMaximizeOnStartup(true);
-
+		
+		if(this.config == null) {
+			this.config = injector.getInstance(ShellConfiguration.class);
+			this.config.setShowToolboxOnStartup(false).setTitle("RCP Lite").setMaximizeOnStartup(true);
+		}else {
+			this.config = config;
+		}
+	}
+	
+	public ShellConfiguration getShellConfiguration(){
+		return this.config;
+	}
+	
+	public static Injector getInjector() {
+		return injector;
+	}
+	
+	public void start() {
 		Shell shell = injector.getInstance(Shell.class);
 		shell.setConfiguration(config);
 		SwingUtilities.invokeLater(() -> shell.launch());

@@ -3,26 +3,22 @@ package org.rcplite.core.windows;
 import static org.rcplite.core.Application.getInjector;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
+import javax.swing.JToolBar;
 
 import org.rcplite.api.windows.Component;
+import org.rcplite.api.windows.ShellConfiguration;
 import org.rcplite.api.windows.StatusBar;
-import org.rcplite.core.config.PlatformShellConfiguration;
-import org.rcplite.core.windows.controls.AbstractStatusBar;
-import org.rcplite.core.windows.controls.ShellStatusBar;
+import org.rcplite.core.windows.controls.ToolBar;
+import org.rcplite.core.windows.layout.WrapLayout;
 
 import com.google.inject.Inject;
 
@@ -30,7 +26,6 @@ import net.infonode.docking.RootWindow;
 import net.infonode.docking.SplitWindow;
 import net.infonode.docking.TabWindow;
 import net.infonode.docking.View;
-import net.infonode.docking.properties.DockingWindowProperties;
 import net.infonode.docking.theme.ClassicDockingTheme;
 import net.infonode.docking.theme.DockingWindowsTheme;
 import net.infonode.docking.util.DockingUtil;
@@ -56,18 +51,26 @@ public class PlatformShell extends AbstractShell {
     private ArrayList<View> openPropertyView;
     private ArrayList<View> openOutputViews;
     private ArrayList<View> openExplorerViews;
-    private Set<Component> components;    
+    private Set<Component> components;   
+    private Set<ToolBar>toolbars;   
     StatusBar statusBar;
 
-	@Inject public PlatformShell(Set<Component> components, StatusBar statusBar) {
+	@Inject public PlatformShell(
+			Set<Component> components, 
+			StatusBar statusBar, 
+			ShellConfiguration config,
+			Set<ToolBar> toolbars) {
 		this.components = components;
 		this.statusBar = statusBar;
-        this.setTitle(PlatformShellConfiguration.getDefaultConfig().getTitle());
+		this.toolbars = toolbars;
+		this.setConfiguration(config);
+        this.setTitle(getConfiguration().getTitle());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLayout(new BorderLayout());
 
 		initUIComponents();
         initMenu();
+        initToolBar();
         initStatusBar();
 		setSize(900, 700);
 	}
@@ -76,7 +79,17 @@ public class PlatformShell extends AbstractShell {
 		JComponent panel = statusBar.getComponent();
 		add(panel,BorderLayout.SOUTH);
 	}
+	
+	private void initToolBar() {
+		JPanel panel = new JPanel();
+	    panel.setLayout(new WrapLayout(WrapLayout.LEFT));
+	    for(ToolBar t:toolbars) {
+	    	panel.add(t.getBar());
+	    }
+	    add(panel, BorderLayout.PAGE_START);
+	}
 
+	@SuppressWarnings("unchecked")
 	private void initMenu(){
         PlatformMenuFactory.addMenu("File");
         PlatformMenuFactory.addMenu("Edit");
@@ -154,15 +167,15 @@ public class PlatformShell extends AbstractShell {
 
         SplitWindow explorerDocumentsSplit = new SplitWindow(true);
         explorerDocumentsSplit.setWindows(explorerWindow, documentsWindow);
-        explorerDocumentsSplit.setDividerLocation(0.25f);
+        explorerDocumentsSplit.setDividerLocation(getExplorerDividerLocation());
 
         SplitWindow explorerDocumentsPropertiesSplit = new SplitWindow(true);
         explorerDocumentsPropertiesSplit.setWindows(explorerDocumentsSplit, propertiesWindow);
-        explorerDocumentsPropertiesSplit.setDividerLocation(0.8f);
+        explorerDocumentsPropertiesSplit.setDividerLocation(getExplorerAndDocumentDividerLocation());
 
         SplitWindow mainSplit = new SplitWindow(false);
         mainSplit.setWindows(explorerDocumentsPropertiesSplit, outputWindow);
-        mainSplit.setDividerLocation(0.7f);
+        mainSplit.setDividerLocation(getOutputDividerLocation());
 
         rootWindow.setWindow(mainSplit);
 
@@ -174,6 +187,26 @@ public class PlatformShell extends AbstractShell {
 
         add(rootWindow, BorderLayout.CENTER);
         loadComponents();
+    }
+    
+
+    private float getExplorerDividerLocation() {
+    	float bal = 1.0f - getConfiguration().getPreferredPropertiesWindowWidth();
+    	float value = (1*getConfiguration().getPreferredExplorerWindowWidth())/bal;
+    	System.out.println("supplied explorer window width: "+getConfiguration().getPreferredExplorerWindowWidth());
+    	System.out.println("explorer width: "+value);
+    	return value;
+    }
+    
+    private float getExplorerAndDocumentDividerLocation() {
+    	float value = 1.0f - getConfiguration().getPreferredPropertiesWindowWidth();
+    	System.out.println("supplied properties window width: "+getConfiguration().getPreferredPropertiesWindowWidth());
+    	System.out.println("explorer+document width: "+value);
+    	return value;
+    }
+    
+    private float getOutputDividerLocation() {
+    	return 1.0f - getConfiguration().getPreferredOutputWindowHeight();
     }
 
     private void loadComponents(){
@@ -275,9 +308,6 @@ public class PlatformShell extends AbstractShell {
 
     @Override
     public void launch(){
-	    if(getConfiguration().showToolboxOnStartup()){
-            addViewComponent(new ToolBoxComponent());
-        }
 
         if (getConfiguration().isMaximizeOnStartup()){
             setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);

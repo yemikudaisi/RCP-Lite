@@ -32,7 +32,7 @@ public class PlatformModule extends AbstractModule implements PluginModule{
 		shellStatusBarItemBinder.addBinding().to(MessageStatusBarItem.class).in(Scopes.SINGLETON);
 		
 		bind(StatusBar.class).to(ShellStatusBar.class).in(Scopes.SINGLETON);
-		bind(ShellConfiguration.class).to(PlatformShellConfiguration.class);
+		bind(ShellConfiguration.class).to(PlatformShellConfiguration.class).in(Scopes.SINGLETON);
 		bind(EventBroker.class).to(PlatformEventBroker.class).in(Scopes.SINGLETON);
 		bind(LogService.class).to(PlatformLogService.class);	
 		bind(Shell.class).to(PlatformShell.class);

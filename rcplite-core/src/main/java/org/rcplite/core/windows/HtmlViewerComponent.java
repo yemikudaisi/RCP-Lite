@@ -1,6 +1,5 @@
 package org.rcplite.core.windows;
 
-import org.rcplite.core.services.PlatformLogService;
 import org.rcplite.core.spi.HtmlViewer;
 
 import javax.swing.*;
