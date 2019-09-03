@@ -3,16 +3,15 @@ package org.rcplite.core.windows;
 import static org.rcplite.core.Application.getInjector;
 
 import java.awt.BorderLayout;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JToolBar;
 
 import org.rcplite.api.windows.Component;
 import org.rcplite.api.windows.ShellConfiguration;
@@ -35,22 +34,18 @@ import net.infonode.util.Direction;
 @SuppressWarnings("serial")
 public class PlatformShell extends AbstractShell {
 
-	public final static String DOCUMENTS_WINDOW_NAME = "windows.documents";
-	public final static String EXPLORERS_WINDOW_NAME = "windows.explorer";
-	public final static String PROPERTIES_WINDOW_NAME = "windows.properties";
-	public final static String OUTPUT_WINDOW_NAME = "windows.outputs";
+	public final static String CENTER_WINDOW_NAME = "windows.documents";
+	public final static String LEFT_WINDOW_NAME = "windows.explorer";
+	public final static String RIGHT_WINDOW_NAME = "windows.properties";
+	public final static String BOTTOM_WINDOW_NAME = "windows.outputs";
 	
-	private TabWindow explorerWindow = new TabWindow();
-    private TabWindow documentsWindow = new TabWindow();
-    private TabWindow outputWindow = new TabWindow();
-    private TabWindow propertiesWindow = new TabWindow();
+	private TabWindow leftWindow = new TabWindow();
+    private TabWindow centerWindow = new TabWindow();
+    private TabWindow bottomWindow = new TabWindow();
+    private TabWindow rightWindow = new TabWindow();
 	private RootWindow rootWindow;
     private ViewMap rootViewMap;
 
-    private ArrayList<View> openDocumentViews;
-    private ArrayList<View> openPropertyView;
-    private ArrayList<View> openOutputViews;
-    private ArrayList<View> openExplorerViews;
     private Set<Component> components;   
     private Set<ToolBar>toolbars;   
     StatusBar statusBar;
@@ -141,40 +136,42 @@ public class PlatformShell extends AbstractShell {
 	
     private void initUIComponents(){
     	TabWindowListener listener = new TabWindowListener(
-    			PROPERTIES_WINDOW_NAME,
-    			OUTPUT_WINDOW_NAME,
-    			EXPLORERS_WINDOW_NAME);
+    			RIGHT_WINDOW_NAME,
+    			BOTTOM_WINDOW_NAME,
+    			LEFT_WINDOW_NAME);
     	
-    	propertiesWindow.addListener(listener);
-    	propertiesWindow.setName(PlatformShell.PROPERTIES_WINDOW_NAME);
+    	rightWindow.addListener(listener);
+    	rightWindow.getWindowProperties().setUndockEnabled(false);
+    	rightWindow.getWindowProperties().setMaximizeEnabled(false);
+    	rightWindow.setName(PlatformShell.RIGHT_WINDOW_NAME);
     	
-    	outputWindow.addListener(listener);
-    	outputWindow.setName(PlatformShell.OUTPUT_WINDOW_NAME);
+    	bottomWindow.addListener(listener);
+    	bottomWindow.setName(PlatformShell.BOTTOM_WINDOW_NAME);
+    	bottomWindow.getWindowProperties().setUndockEnabled(false);
+    	bottomWindow.getWindowProperties().setMaximizeEnabled(false);
     	
-    	explorerWindow.addListener(listener);
-    	explorerWindow.setName(PlatformShell.EXPLORERS_WINDOW_NAME);
+    	leftWindow.addListener(listener);
+    	leftWindow.setName(PlatformShell.LEFT_WINDOW_NAME);
+    	leftWindow.getWindowProperties().setCloseEnabled(false);
+    	leftWindow.getWindowProperties().setUndockEnabled(false);
+    	leftWindow.getWindowProperties().setMaximizeEnabled(false);
     	
-    	documentsWindow.getWindowProperties().setCloseEnabled(false);
-    	documentsWindow.setName(PlatformShell.DOCUMENTS_WINDOW_NAME);
-
-        openDocumentViews = new ArrayList<>();
-        openPropertyView = new ArrayList<>();
-        openExplorerViews = new ArrayList<>();
-        openOutputViews = new ArrayList<>();
+    	centerWindow.getWindowProperties().setCloseEnabled(false);
+    	centerWindow.setName(PlatformShell.CENTER_WINDOW_NAME);
 
         rootViewMap = new ViewMap();
         rootWindow = DockingUtil.createRootWindow(rootViewMap, true);
 
         SplitWindow explorerDocumentsSplit = new SplitWindow(true);
-        explorerDocumentsSplit.setWindows(explorerWindow, documentsWindow);
+        explorerDocumentsSplit.setWindows(leftWindow, centerWindow);
         explorerDocumentsSplit.setDividerLocation(getExplorerDividerLocation());
 
         SplitWindow explorerDocumentsPropertiesSplit = new SplitWindow(true);
-        explorerDocumentsPropertiesSplit.setWindows(explorerDocumentsSplit, propertiesWindow);
+        explorerDocumentsPropertiesSplit.setWindows(explorerDocumentsSplit, rightWindow);
         explorerDocumentsPropertiesSplit.setDividerLocation(getExplorerAndDocumentDividerLocation());
 
         SplitWindow mainSplit = new SplitWindow(false);
-        mainSplit.setWindows(explorerDocumentsPropertiesSplit, outputWindow);
+        mainSplit.setWindows(explorerDocumentsPropertiesSplit, bottomWindow);
         mainSplit.setDividerLocation(getOutputDividerLocation());
 
         rootWindow.setWindow(mainSplit);
@@ -182,8 +179,17 @@ public class PlatformShell extends AbstractShell {
         DockingWindowsTheme theme = new ClassicDockingTheme();
         rootWindow.getWindowBar(Direction.DOWN).setEnabled(true);
 
+        // Split window
+        rootWindow.getRootWindowProperties().getSplitWindowProperties()
+        .setContinuousLayoutEnabled(false);
+        // Window bar
+        rootWindow.getRootWindowProperties().getWindowBarProperties()
+        	.setContinuousLayoutEnabled(false);
+        
         rootWindow.getRootWindowProperties().addSuperObject(
                 theme.getRootWindowProperties());
+        
+        //rootWindow.getRootWindowProperties().getWindowBarProperties()
 
         add(rootWindow, BorderLayout.CENTER);
         loadComponents();
@@ -211,7 +217,7 @@ public class PlatformShell extends AbstractShell {
 
     private void loadComponents(){
     	
-    	propertiesWindow.close(); // FIXME properties window not closing
+    	rightWindow.close(); // FIXME properties window not closing
     	
         Iterator<Component> views = components.iterator();
         while(views.hasNext()){
@@ -228,51 +234,38 @@ public class PlatformShell extends AbstractShell {
         }
     }
 
-    private void addPropertyView(View v){
-        for(View p: openPropertyView){
-            if(p.getTitle().equalsIgnoreCase(v.getTitle()) ){
-                v.restore();
-                return;
-            }
-        }
-        propertiesWindow.addTab(v);
-        openPropertyView.add(v);
+    private void addRightTab(View v){
+    	rightWindow.restore();
+        rightWindow.addTab(v);
     }
 
-    private void addDocumentView(View view) {
-    	documentsWindow.restore();
-        for(View doc: openDocumentViews){
-            if(doc.getTitle().equalsIgnoreCase(view.getTitle()) ){
-                doc.restore();
-                return;
-            }
-        }
-        documentsWindow.addTab(view);
-        openDocumentViews.add(view);
+    private void addCenterTab(View view) {
+    	centerWindow.restore();
+        centerWindow.addTab(view);
     }
 
-    private void addExplorerView(View view) {
-    	explorerWindow.restore();
+    private void addLeftTab(View view) {
+    	leftWindow.restore();
+    	/*
         for(View doc: openExplorerViews){
             if(doc.getTitle().equalsIgnoreCase(view.getTitle()) ){
                 doc.restore();
                 return;
             }
-        }
-        explorerWindow.addTab(view);
-        openExplorerViews.add(view);
+        }*/
+        //view.getViewProperties().getViewTitleBarProperties().setOrientation(ViewTitleBarProp)
+        leftWindow.addTab(view);
     }
 
-    private void addOutputView(View view) {
-    	outputWindow.restore();
-        for(View doc: openOutputViews){
+    private void addBottomView(View view) {
+    	bottomWindow.restore();
+        /*for(View doc: openOutputViews){
             if(doc.getTitle().equalsIgnoreCase(view.getTitle()) ){
                 doc.restore();
                 return;
             }
-        }
-        outputWindow.addTab(view);
-        openOutputViews.add(view);
+        }*/
+        bottomWindow.addTab(view);
     }
 
     @Override
@@ -291,16 +284,16 @@ public class PlatformShell extends AbstractShell {
         
         switch (conf.position()){
             case DOCUMENT:
-                addDocumentView(view);
+                addCenterTab(view);
                 break;
             case OUTPUT:
-                addOutputView(view);
+                addBottomView(view);
                 break;
             case EXPLORER:
-                addExplorerView(view);
+                addLeftTab(view);
                 break;
             case PROPERTY:
-                addPropertyView(view);
+                addRightTab(view);
                 break;
         }
     }
@@ -308,6 +301,7 @@ public class PlatformShell extends AbstractShell {
 
     @Override
     public void launch(){
+    	//explorerWindow.addTab(new FloatingWindow(rootWindow));
 
         if (getConfiguration().isMaximizeOnStartup()){
             setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);

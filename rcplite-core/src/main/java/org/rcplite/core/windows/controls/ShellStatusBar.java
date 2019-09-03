@@ -96,11 +96,6 @@ public class ShellStatusBar extends AbstractStatusBar {
             this.showing = showing;
         }
     }
-    public void addItems() {
-    	for(StatusBarItem item:this.statusBarItems) {
-    		this.addItem(item);
-    	}
-    }
 
     /**
      * Creates a new status bar. Sets a {@code MigLayout} layout manager and adds the default config
@@ -116,7 +111,7 @@ public class ShellStatusBar extends AbstractStatusBar {
         //setFont(DEFAULT_FONT);
 
 
-        ImageIcon icon = ImageManager.getImageIcon("/images/icons8-menu-16.png");
+        ImageIcon icon = ImageManager.getImageIcon("/icons/icons8-menu-16.png");
         PopupMenuProvider menuProvider =
                 new PopupMenuProvider() {
                     @Override
@@ -165,16 +160,16 @@ public class ShellStatusBar extends AbstractStatusBar {
      *
      * @param item the item to add
      * @param configurable whether the item should appear in the status bar configuration menu
-     * @param showing whether the item should be shown initially
+     * @param showAtStart whether the item should be shown initially
      * @return {@code true} if the item was added
      */
-    public boolean addItem(StatusBarItem item, boolean configurable, boolean showing) {
+    public boolean addItem(StatusBarItem item, boolean configurable, boolean showAtStart) {
 
         if (findItem(item) < 0) {
-            ItemInfo info = new ItemInfo(item, configurable, getComponentCount(), showing);
+            ItemInfo info = new ItemInfo(item, configurable, getComponentCount(), showAtStart);
             itemInfo.add(info);
 
-            if (showing) {
+            if (showAtStart) {
                 add(item.getComponent());
             }
 
@@ -197,6 +192,15 @@ public class ShellStatusBar extends AbstractStatusBar {
                     new Object[] {item.getName(), item.getID()});
             return false;
         }
+    }
+    
+    /**
+     * Adds the injected status bar items to this status bar
+     */
+    public void addItems() {
+    	for(StatusBarItem item:this.statusBarItems) {
+    		this.addItem(item);
+    	}
     }
 
     /**
@@ -294,6 +298,10 @@ public class ShellStatusBar extends AbstractStatusBar {
         return menu;
     }
 
+    /**
+     * Set the precision to the decimal
+     * This only applies to status items
+     */
     private void setNumDecimals() {
         DecimalDigitsDialog dialog = new DecimalDigitsDialog(numDecimalDigits);
         DialogUtils.showCentred(dialog);

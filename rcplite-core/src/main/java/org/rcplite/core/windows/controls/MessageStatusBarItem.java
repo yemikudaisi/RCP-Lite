@@ -32,7 +32,7 @@ public class MessageStatusBarItem extends ShellStatusBarItem {
         add(label);
     }
     
-    @Subscribe public void displayNewMessage(NewMessageEvent event) {
+    @Subscribe public void displayNewMessage(NewStatusMessageEvent event) {
     	label.setText(event.getString());
     }
 
