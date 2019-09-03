@@ -283,16 +283,16 @@ public class PlatformShell extends AbstractShell {
         view.getWindowProperties().setDragEnabled(conf.dragable());
         
         switch (conf.position()){
-            case DOCUMENT:
+            case CENTER:
                 addCenterTab(view);
                 break;
-            case OUTPUT:
+            case BOTTOM:
                 addBottomView(view);
                 break;
-            case EXPLORER:
+            case LEFT:
                 addLeftTab(view);
                 break;
-            case PROPERTY:
+            case RIGHT:
                 addRightTab(view);
                 break;
         }

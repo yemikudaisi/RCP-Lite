@@ -11,11 +11,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 @ViewComponent.Configuration(
-        position = ComponentPosition.DOCUMENT
+        position = ComponentPosition.CENTER
 )
 public class HtmlViewerComponent extends ViewComponent implements HtmlViewer {
 
-    String htmlString = "<html>\n"
+	private static final long serialVersionUID = 4334752276032716981L;
+	String htmlString = "<html>\n"
             + "<body>\n"
             + "<h1>Welcome!</h1>\n"
             + "<h2>This is an H2 header</h2>\n"

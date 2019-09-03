@@ -1,8 +1,8 @@
 package org.rcplite.core.windows;
 
 public enum ComponentPosition {
-    DOCUMENT,
-    PROPERTY,
-    EXPLORER,
-    OUTPUT
+    CENTER,
+    RIGHT,
+    LEFT,
+    BOTTOM
 }

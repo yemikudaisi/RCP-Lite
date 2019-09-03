@@ -111,7 +111,7 @@ public class ShellStatusBar extends AbstractStatusBar {
         //setFont(DEFAULT_FONT);
 
 
-        ImageIcon icon = ImageManager.getImageIcon("/icons/icons8-menu-16.png");
+        ImageIcon icon = ImageManager.getImageIcon("/images/icons8-settings-16.png");
         PopupMenuProvider menuProvider =
                 new PopupMenuProvider() {
                     @Override

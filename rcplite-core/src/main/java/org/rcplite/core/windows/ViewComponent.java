@@ -8,7 +8,7 @@ public class ViewComponent extends AbstractComponent {
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Configuration{
-        ComponentPosition position() default ComponentPosition.DOCUMENT;
+        ComponentPosition position() default ComponentPosition.CENTER;
         boolean openOnStart() default false;
         boolean closable() default true;
         boolean minimizable() default true;

@@ -21,7 +21,7 @@ import java.util.Calendar;
 
 @SuppressWarnings("serial")
 @ViewComponent.Configuration(
-		position = ComponentPosition.OUTPUT,
+		position = ComponentPosition.BOTTOM,
 		openOnStart = false
 )
 @ViewComponent.Action(
