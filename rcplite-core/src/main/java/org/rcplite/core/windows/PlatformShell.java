@@ -88,7 +88,6 @@ public class PlatformShell extends AbstractShell {
 	private void initMenu(){
         PlatformMenuFactory.addMenu("File");
         PlatformMenuFactory.addMenu("Edit");
-        PlatformMenuFactory.addMenu("Tools");
         PlatformMenuFactory.addMenu("Window");
         PlatformMenuFactory.addMenu("Help");
 
@@ -217,7 +216,8 @@ public class PlatformShell extends AbstractShell {
 
     private void loadComponents(){
     	
-    	rightWindow.close(); // FIXME properties window not closing
+    	// FIXME Make window close when they don't have content -> working not tested
+    	// particularly at startup -> all efforts failed so far 
     	
         Iterator<Component> views = components.iterator();
         while(views.hasNext()){
@@ -301,7 +301,6 @@ public class PlatformShell extends AbstractShell {
 
     @Override
     public void launch(){
-    	//explorerWindow.addTab(new FloatingWindow(rootWindow));
 
         if (getConfiguration().isMaximizeOnStartup()){
             setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);

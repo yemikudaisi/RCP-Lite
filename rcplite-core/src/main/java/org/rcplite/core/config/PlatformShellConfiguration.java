@@ -63,7 +63,7 @@ public class PlatformShellConfiguration implements ShellConfiguration {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ShellConfiguration setPreferredExplorerWindoWidth(float width) {
+	public ShellConfiguration setPreferredLeftWindoWidth(float width) {
 		// TODO: Guard against total of width exceeding one
 		this.preferredExplorerWindowWidth = width;
 		return this;
@@ -78,7 +78,7 @@ public class PlatformShellConfiguration implements ShellConfiguration {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ShellConfiguration setPreferredPropertiesWindowWidth(float width) {
+	public ShellConfiguration setPreferredRightWindowWidth(float width) {
 		// TODO: Guard against total of width exceeding one
 		this.preferredPropertiesWindowWidth = width;
 		return this;
@@ -90,7 +90,7 @@ public class PlatformShellConfiguration implements ShellConfiguration {
 	}
 	
 	@Override
-	public ShellConfiguration setPreferredOutputWindowHeight(float height) {
+	public ShellConfiguration setPreferredBottomWindowHeight(float height) {
 		if(!(height > 1.0f)) {
 			preferredOutputWindowHeight= height;
 		}

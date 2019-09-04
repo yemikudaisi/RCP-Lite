@@ -16,9 +16,9 @@ public interface ShellConfiguration {
 	 * @param width a float ranging from 0.0 to 1 (in which is case it will
 	 * take the entire width of the shell) defaults to 0.2
 	 * @return instance of the shell configuration
-	 * @see #setPreferredPropertiesWindowWidth(float)
+	 * @see #setPreferredRightWindowWidth(float)
 	 */
-	ShellConfiguration setPreferredExplorerWindoWidth(float width);
+	ShellConfiguration setPreferredLeftWindoWidth(float width);
 	
 	float getPreferredExplorerWindowWidth();
 	
@@ -32,9 +32,9 @@ public interface ShellConfiguration {
 	 * @param width a float ranging from 0.0 to 1 (in which is case it will
 	 * take the entire width of the shell) defaults to 0.2
 	 * @return instance of the shell configuration
-	 * @see #setPreferredExplorerWindoWidth(float)
+	 * @see #setPreferredLeftWindoWidth(float)
 	 */
-	ShellConfiguration setPreferredPropertiesWindowWidth(float width);
+	ShellConfiguration setPreferredRightWindowWidth(float width);
 	
 	float getPreferredPropertiesWindowWidth();
 	
@@ -45,10 +45,10 @@ public interface ShellConfiguration {
 	 * @param width a float ranging from 0.0 to 1 (in which is case it will
 	 * take the entire height of the shell) defaults to 0.25
 	 * @return instance of the shell configuration
-	 * @see #setPreferredPropertiesWindowWidth(float)
-	 * @see #setPreferredExplorerWindoWidth(float)
+	 * @see #setPreferredRightWindowWidth(float)
+	 * @see #setPreferredLeftWindoWidth(float)
 	 */
-	ShellConfiguration setPreferredOutputWindowHeight(float height);
+	ShellConfiguration setPreferredBottomWindowHeight(float height);
 	
 	float getPreferredOutputWindowHeight();
 
