@@ -4,14 +4,14 @@ import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
-import org.rcplite.core.spi.Preference;
+import org.rcplite.api.windows.PreferencePage;
 
 public class PreferenceService {
     static PreferenceService instance;
-    private ServiceLoader<Preference> loader;
+    private ServiceLoader<PreferencePage> loader;
 
     private PreferenceService() {
-        loader = ServiceLoader.load(Preference.class);
+        loader = ServiceLoader.load(PreferencePage.class);
     }
 
     /**
@@ -24,8 +24,8 @@ public class PreferenceService {
         return instance;
     }
 
-    public Iterator<Preference> getPreferences() {
-        Iterator<Preference> preferenceIterators = null;
+    public Iterator<PreferencePage> getPreferences() {
+        Iterator<PreferencePage> preferenceIterators = null;
         try {
             preferenceIterators = loader.iterator();
         } catch (ServiceConfigurationError serviceError) {

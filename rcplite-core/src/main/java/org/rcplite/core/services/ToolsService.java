@@ -1,10 +1,10 @@
 package org.rcplite.core.services;
 
-import org.rcplite.core.modules.Tool;
-
 import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
+
+import org.rcplite.api.plugins.Tool;
 
 public class ToolsService {
     static ToolsService instance;

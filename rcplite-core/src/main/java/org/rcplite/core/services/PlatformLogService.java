@@ -4,8 +4,8 @@ import org.rcplite.api.events.EventBroker;
 import org.rcplite.api.logging.Log;
 import org.rcplite.api.logging.LogTypes;
 import org.rcplite.api.services.LogService;
+import org.rcplite.api.services.Logger;
 import org.rcplite.core.events.LogEvent;
-import org.rcplite.core.spi.Logger;
 
 import com.google.inject.Inject;
 
