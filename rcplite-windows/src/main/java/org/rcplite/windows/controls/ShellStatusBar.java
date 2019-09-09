@@ -1,6 +1,5 @@
 package org.rcplite.windows.controls;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
@@ -90,8 +89,6 @@ public class ShellStatusBar extends AbstractStatusBar {
         this.itemInfo = new ArrayList<ItemInfo>();
 
         setLayout(new MigLayout("insets " + INSET));
-        setBackground(new Color(224, 224, 224));
-        //setFont(DEFAULT_FONT);
 
 
         ImageIcon icon = ImageManager.getImageIcon("/images/icons8-settings-16.png");
