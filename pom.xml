@@ -3,17 +3,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.rcplite</groupId>
-  <artifactId>rcplite-platform</artifactId>
+  <artifactId>rcplite</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
-
-  <name>rcplite-platform</name>
-  <url>https://github.com/yemikudaisi/rcplite-platform</url>
+  <name>RCP Lite</name>
+  <url>https://github.com/yemikudaisi/RCP-Lite</url>
 
   <modules>
 		<module>rcplite-core</module>
-		<module>rcplite-windows</module>
-	<module>rcplite-api</module>
+		<module>rcplite-windows</module><module>rcplite-api</module>
   </modules>
 	
    <properties>
@@ -39,7 +37,6 @@
         </plugin>
     </plugins>
 </build>
-
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -48,11 +45,15 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-		<groupId>net.infonode</groupId>
-        <artifactId>infonode-docking-window</artifactId>
-        <version>1.6.1</version>
-        <scope>system</scope>
-        <systemPath>C:/workspace/java/rcplite-platform/libs/idw-gpl.jar</systemPath>
-    </dependency>
+      <groupId>com.github.yemikudaisi</groupId>
+      <artifactId>infonode-docking-windows</artifactId>
+      <version>1.6.1</version>
+	  </dependency>
   </dependencies>
+  <repositories>
+    <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+    </repository>
+  </repositories>
 </project>
