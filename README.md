@@ -7,6 +7,16 @@ A minimalist Rich Client Platform inspired by Netbeans Platform
 ## Why RCP Lite
 Since there is Eclipse RCP and Netbeans Platform for Java, why reinvent the wheel? The reason is simple, there are too huge for basic applications. If all you need is menus, a few docks here and there and your application is not an IDE why go through the long learning curve of Eclipse and Netbeans (they are not intended for IDEs alone) just for an application that requires a few lines of codes. 
 
+## Dependencies
+1. [Google Guice](github.com/guice)
+2. [Google Guava](github.com/guava)
+3. [Infonode Windows Dock](github.com/infonode-docking-windows)
+
+## Run Examples
+```md
+mvn exec:java -pl rcplite-examples
+```
+
 ## Usage
 Add as dependencies
 ### Gradle
@@ -39,21 +49,33 @@ Add as dependencies
 
 Add this to the main method of your application
 ```java
-public class Program{
-    public static void main(String[] args) {
-        PlatformShellConfiguration config = new PlatformShellConfiguration();
-        config.setShowToolboxOnStartup(true)
-                .setTitle("RCP Lite")
-                .setMaximizeOnStartup(true);
+package org.rcplite.examples;
 
-        ShellService.getInstance().getShell()
-                .setConfiguration(config);
-        SwingUtilities.invokeLater(() -> ShellService.getInstance().getShell().launch());
+import org.rcplite.api.windows.ShellService;
+import org.rcplite.core.RcpApplication;
+import org.rcplite.core.config.PlatformShellConfiguration;
+import javax.swing.SwingUtilities;
+
+public class Quickstart {
+    public static void main(String[] args) {
+
+        RcpApplication app = new RcpApplication();
+        app.getShellConfiguration()
+                .setShowToolboxOnStartup(false)
+                .setTitle("RCP Lite")
+                .setMaximizeOnStartup(true)
+                .setPreferredLeftWindoWidth(0.15f) // Specifies width of the Tab window to the left
+                .setPreferredRightWindowWidth(0.18f) // Specifies width of the Tab window to the right
+                .setPreferredBottomWindowHeight(0.2f); // Specifies width of the Tab bottom (log) window
+
+        app.start();
     }
 }
 ```
 
-Now, when you run you application  you should see a pretty empty window.
+Now, when you run your application  you should see a pretty empty window with some basic menu item as shown below.
+
+![RCP Lite - Default Window](doc/images/0.png)
 
 ## What it does
 
