@@ -56,7 +56,7 @@ public class PlatformShell extends AbstractShell {
 			Set<Component> components, 
 			StatusBar statusBar, 
 			ShellConfiguration config,
-			Set<ToolBar> toolbars,
+			@Nullable Set<ToolBar> toolbars,
 			@Nullable Set<PreferencePage> preferences) {
 		this.components = components;
 		this.statusBar = statusBar;
@@ -80,6 +80,8 @@ public class PlatformShell extends AbstractShell {
 	}
 	
 	private void initToolBar() {
+	    if (this.toolbars == null || this.toolbars.isEmpty())
+	        return;
 		JPanel panel = new JPanel();
 	    panel.setLayout(new WrapLayout(WrapLayout.LEFT));
 	    for(ToolBar t:toolbars) {

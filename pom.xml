@@ -1,59 +1,73 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.rcplite</groupId>
-  <artifactId>rcplite</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>RCP Lite</name>
-  <url>https://github.com/yemikudaisi/RCP-Lite</url>
+    <groupId>org.rcplite</groupId>
+    <artifactId>rcplite</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>RCP Lite</name>
+    <url>https://github.com/yemikudaisi/RCP-Lite</url>
 
-  <modules>
-		<module>rcplite-core</module>
-		<module>rcplite-windows</module><module>rcplite-api</module>
-  </modules>
-	
-   <properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  		<maven.compiler.target>1.8</maven.compiler.target>
-    	<maven.compiler.source>1.8</maven.compiler.source>
-    	<main.basedir>${project.basedir}</main.basedir>
-   </properties>
-   
-   <build>
-    <plugins>
-        <plugin>
-            <!-- Configure the project to use java 8 version. -->
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.5.1</version>
-            <configuration>
-                <source>${maven.compiler.target}</source>
-                <target>${maven.compiler.target}</target>
-                <!-- Disable annotation processing for ourselves. -->
-                <compilerArgument>-proc:none</compilerArgument>
-            </configuration>
-        </plugin>
-    </plugins>
-</build>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.github.yemikudaisi</groupId>
-      <artifactId>infonode-docking-windows</artifactId>
-      <version>1.6.1</version>
-	  </dependency>
-  </dependencies>
-  <repositories>
-    <repository>
-      <id>jitpack.io</id>
-      <url>https://jitpack.io</url>
-    </repository>
-  </repositories>
+    <modules>
+        <module>rcplite-core</module>
+        <module>rcplite-windows</module>
+        <module>rcplite-api</module>
+        <module>rcplite-examples</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <main.basedir>${project.basedir}</main.basedir>
+    </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <!-- Configure the project to use java 8 version. -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.5.1</version>
+                    <configuration>
+                        <source>${maven.compiler.target}</source>
+                        <target>${maven.compiler.target}</target>
+                        <!-- Disable annotation processing for ourselves. -->
+                        <compilerArgument>-proc:none</compilerArgument>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.3.2</version>
+                    <configuration>
+                        <skip>true</skip>
+                        <executable>java</executable>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.yemikudaisi</groupId>
+            <artifactId>infonode-docking-windows</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+    </dependencies>
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 </project>

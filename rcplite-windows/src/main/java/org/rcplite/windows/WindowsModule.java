@@ -1,17 +1,15 @@
 package org.rcplite.windows;
 
 import org.rcplite.api.plugins.PluginModule;
-import org.rcplite.api.windows.Component;
-import org.rcplite.api.windows.PreferencePage;
-import org.rcplite.api.windows.Shell;
-import org.rcplite.api.windows.StatusBar;
-import org.rcplite.api.windows.StatusBarItem;
+import org.rcplite.api.windows.*;
 import org.rcplite.windows.controls.MessageStatusBarItem;
 import org.rcplite.windows.controls.ShellStatusBar;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.multibindings.Multibinder;
+
+import javax.swing.*;
 
 public class WindowsModule extends AbstractModule implements PluginModule{
 
@@ -28,5 +26,8 @@ public class WindowsModule extends AbstractModule implements PluginModule{
 		
 		bind(StatusBar.class).to(ShellStatusBar.class).in(Scopes.SINGLETON);
 		bind(Shell.class).to(PlatformShell.class);
-	}	
+
+		Multibinder<ToolBar> toolBarBinder = Multibinder.newSetBinder( binder(), ToolBar.class);
+		toolBarBinder.addBinding().to(DefaultToolBar.class).in(Scopes.SINGLETON);
+	}
 }
