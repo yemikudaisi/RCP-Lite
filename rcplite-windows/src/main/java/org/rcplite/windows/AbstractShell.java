@@ -18,4 +18,9 @@ public abstract class AbstractShell extends JFrame implements Shell {
     public ShellConfiguration getConfiguration() {
     	return this.configuration;
     };
+
+    protected ViewComponent.Configuration getComponentConfiguration(Class type){
+        return (ViewComponent.Configuration) type
+                .getAnnotation(ViewComponent.Configuration.class);
+    }
 }

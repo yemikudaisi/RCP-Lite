@@ -15,7 +15,7 @@ public class TabWindowListener implements DockingWindowListener {
 	@Override
 	public void windowAdded(DockingWindow addedToWindow, DockingWindow addedWindow) {
 		if(isIncluded(addedToWindow)) {
-			System.out.println(addedWindow.getName() +" added to " + addedToWindow.getName());
+			System.out.println(addedWindow.getName() +"already added to " + addedToWindow.getName());
 			System.out.println(addedToWindow.getName()+ " restored.");
 			addedToWindow.restore();
 		}

@@ -1,7 +1,6 @@
 package org.rcplite.windows;
 
 import java.awt.BorderLayout;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -35,15 +34,15 @@ import net.infonode.util.Direction;
 @SuppressWarnings("serial")
 public class PlatformShell extends AbstractShell {
 
-	public final static String CENTER_WINDOW_NAME = "windows.documents";
-	public final static String LEFT_WINDOW_NAME = "windows.explorer";
-	public final static String RIGHT_WINDOW_NAME = "windows.properties";
-	public final static String BOTTOM_WINDOW_NAME = "windows.outputs";
+	public final static String CENTER_WINDOW_NAME = "windows.center";
+	public final static String WEST_WINDOW_NAME = "windows.west";
+	public final static String EAST_WINDOW_NAME = "windows.east";
+	public final static String SOUTH_WINDOW_NAME = "windows.south";
 	
-	private TabWindow leftWindow = new TabWindow();
-    private TabWindow centerWindow = new TabWindow();
-    private TabWindow bottomWindow = new TabWindow();
-    private TabWindow rightWindow = new TabWindow();
+	private TabWindow westWindow ;
+    private TabWindow centerWindow;
+    private TabWindow southWindow;
+    private TabWindow eastWindow;
 	private RootWindow rootWindow;
     private ViewMap rootViewMap;
 
@@ -106,31 +105,29 @@ public class PlatformShell extends AbstractShell {
         });
         
         // Get view components from components service
-        Iterator<Component> views = components.iterator();
-        while(views.hasNext()){
-            Component v = views.next();
+        for (Component v : components) {
             Class type = v.getClass();
             ViewComponent.Menu menu = (ViewComponent.Menu) type.getAnnotation(ViewComponent.Menu.class); // Get menu for component
             ViewComponent.Action action = (ViewComponent.Action) type.getAnnotation(ViewComponent.Action.class); // Get action for component
-            if(menu != null && action != null) {
+            if (menu != null && action != null) {
                 String[] treeArr = menu.path().split("/");
                 JMenuItem menuItem = PlatformMenuFactory.buildMenus(new ArrayList<String>(Arrays.asList(treeArr)), v.getIcon());
 
                 menuItem.addActionListener(e -> {
-                    switch(action.category()){
+                    switch (action.category()) {
                         case VIEW:
-                        	Object obj = Application.getInjector().getInstance(action.id());
-                            if(obj instanceof ViewComponent){
-                                this.addViewComponent((ViewComponent)obj);
+                            Object obj = Application.getInjector().getInstance(action.id());
+                            if (obj instanceof ViewComponent) {
+                                this.addViewComponent((ViewComponent) obj);
                             }
                             break;
-					case PERSPECTIVE:
-						break;
-					default:
-						break;
+                        case PERSPECTIVE:
+                            break;
+                        default:
+                            break;
                     }
                 });
-                switch (action.category()){
+                switch (action.category()) {
                     default:
                 }
             }
@@ -141,25 +138,25 @@ public class PlatformShell extends AbstractShell {
 	
     private void initUIComponents(){
     	TabWindowListener listener = new TabWindowListener(
-    			RIGHT_WINDOW_NAME,
-    			BOTTOM_WINDOW_NAME,
-    			LEFT_WINDOW_NAME);
+                EAST_WINDOW_NAME,
+                SOUTH_WINDOW_NAME,
+                WEST_WINDOW_NAME);
     	
-    	rightWindow.addListener(listener);
-    	rightWindow.getWindowProperties().setUndockEnabled(false);
-    	rightWindow.getWindowProperties().setMaximizeEnabled(false);
-    	rightWindow.setName(PlatformShell.RIGHT_WINDOW_NAME);
+    	eastWindow.addListener(listener);
+    	eastWindow.getWindowProperties().setUndockEnabled(false);
+    	eastWindow.getWindowProperties().setMaximizeEnabled(false);
+    	eastWindow.setName(PlatformShell.EAST_WINDOW_NAME);
     	
-    	bottomWindow.addListener(listener);
-    	bottomWindow.setName(PlatformShell.BOTTOM_WINDOW_NAME);
-    	bottomWindow.getWindowProperties().setUndockEnabled(false);
-    	bottomWindow.getWindowProperties().setMaximizeEnabled(false);
+    	southWindow.addListener(listener);
+    	southWindow.setName(PlatformShell.SOUTH_WINDOW_NAME);
+    	southWindow.getWindowProperties().setUndockEnabled(false);
+    	southWindow.getWindowProperties().setMaximizeEnabled(false);
     	
-    	leftWindow.addListener(listener);
-    	leftWindow.setName(PlatformShell.LEFT_WINDOW_NAME);
-    	leftWindow.getWindowProperties().setCloseEnabled(false);
-    	leftWindow.getWindowProperties().setUndockEnabled(false);
-    	leftWindow.getWindowProperties().setMaximizeEnabled(false);
+    	westWindow.addListener(listener);
+    	westWindow.setName(PlatformShell.WEST_WINDOW_NAME);
+    	westWindow.getWindowProperties().setCloseEnabled(false);
+    	westWindow.getWindowProperties().setUndockEnabled(false);
+    	westWindow.getWindowProperties().setMaximizeEnabled(false);
     	
     	centerWindow.getWindowProperties().setCloseEnabled(false);
     	centerWindow.setName(PlatformShell.CENTER_WINDOW_NAME);
@@ -168,15 +165,15 @@ public class PlatformShell extends AbstractShell {
         rootWindow = DockingUtil.createRootWindow(rootViewMap, true);
 
         SplitWindow explorerDocumentsSplit = new SplitWindow(true);
-        explorerDocumentsSplit.setWindows(leftWindow, centerWindow);
+        explorerDocumentsSplit.setWindows(westWindow, centerWindow);
         explorerDocumentsSplit.setDividerLocation(getExplorerDividerLocation());
 
         SplitWindow explorerDocumentsPropertiesSplit = new SplitWindow(true);
-        explorerDocumentsPropertiesSplit.setWindows(explorerDocumentsSplit, rightWindow);
+        explorerDocumentsPropertiesSplit.setWindows(explorerDocumentsSplit, eastWindow);
         explorerDocumentsPropertiesSplit.setDividerLocation(getExplorerAndDocumentDividerLocation());
 
         SplitWindow mainSplit = new SplitWindow(false);
-        mainSplit.setWindows(explorerDocumentsPropertiesSplit, bottomWindow);
+        mainSplit.setWindows(explorerDocumentsPropertiesSplit, southWindow);
         mainSplit.setDividerLocation(getOutputDividerLocation());
 
         rootWindow.setWindow(mainSplit);
@@ -220,6 +217,10 @@ public class PlatformShell extends AbstractShell {
     	return 1.0f - getConfiguration().getPreferredOutputWindowHeight();
     }
 
+    Boolean centerComponentsExists,
+            westernComponentsExists,
+            southernComponentsExists,
+            easternComponentsExists;
     private void loadComponents(){
     	
     	// FIXME Make window close when they don't have content -> working not tested
@@ -234,15 +235,101 @@ public class PlatformShell extends AbstractShell {
                 ViewComponent viewComponent = (ViewComponent) v;
                 
                 if(conf != null && conf.openOnStart()) {
+                    switch (conf.position()){
+                        case CENTER:
+                            centerComponentsExists = (!centerComponentsExists?true:false);
+                            break;
+                        case SOUTH:
+                            southernComponentsExists = (!centerComponentsExists?true:false);
+                            break;
+                        case WEST:
+                            westernComponentsExists = (!centerComponentsExists?true:false);
+                            break;
+                        case EAST:
+                            easternComponentsExists = (!easternComponentsExists?true:false);
+                            break;
+                    }
                 	addViewComponent(viewComponent);
                 }
             }
         }
     }
 
+    private TabWindow createDefaultTabbedWindow(String name, TabWindowListener listener){
+        TabWindow window = new TabWindow();
+        window.setName(name);
+        window.addListener(listener);
+        window.getWindowProperties().setCloseEnabled(false);
+        window.getWindowProperties().setUndockEnabled(false);
+        window.getWindowProperties().setMaximizeEnabled(false);
+        return window;
+    }
+
+    /**
+     * Initializes only the tabbed windows necessary to accommodate docking components.
+     * For example, if there are no dock windows position to the SOUTH, the southern
+     * TabWindow will not be instatiated
+     */
+    private void initializeTabbedWindows(){
+        TabWindowListener listener = new TabWindowListener(
+                EAST_WINDOW_NAME,
+                SOUTH_WINDOW_NAME,
+                WEST_WINDOW_NAME);
+
+        if (easternComponentsExists) {
+            eastWindow = createDefaultTabbedWindow(EAST_WINDOW_NAME, listener);
+        }
+
+        if(southernComponentsExists){
+            southWindow = createDefaultTabbedWindow(SOUTH_WINDOW_NAME, listener);
+        }
+
+        if(westernComponentsExists){
+            westWindow = createDefaultTabbedWindow(WEST_WINDOW_NAME, listener);
+        }
+
+        centerWindow.getWindowProperties().setCloseEnabled(false);
+        centerWindow.setName(PlatformShell.CENTER_WINDOW_NAME);
+
+        rootViewMap = new ViewMap();
+        rootWindow = DockingUtil.createRootWindow(rootViewMap, true);
+
+        SplitWindow explorerDocumentsSplit = new SplitWindow(true);
+        explorerDocumentsSplit.setWindows(westWindow, centerWindow);
+        explorerDocumentsSplit.setDividerLocation(getExplorerDividerLocation());
+
+        SplitWindow explorerDocumentsPropertiesSplit = new SplitWindow(true);
+        explorerDocumentsPropertiesSplit.setWindows(explorerDocumentsSplit, eastWindow);
+        explorerDocumentsPropertiesSplit.setDividerLocation(getExplorerAndDocumentDividerLocation());
+
+        SplitWindow mainSplit = new SplitWindow(false);
+        mainSplit.setWindows(explorerDocumentsPropertiesSplit, southWindow);
+        mainSplit.setDividerLocation(getOutputDividerLocation());
+
+        rootWindow.setWindow(mainSplit);
+
+        DockingWindowsTheme theme = new ClassicDockingTheme();
+        rootWindow.getWindowBar(Direction.DOWN).setEnabled(true);
+
+        // Split window
+        rootWindow.getRootWindowProperties().getSplitWindowProperties()
+                .setContinuousLayoutEnabled(false);
+        // Window bar
+        rootWindow.getRootWindowProperties().getWindowBarProperties()
+                .setContinuousLayoutEnabled(false);
+
+        rootWindow.getRootWindowProperties().addSuperObject(
+                theme.getRootWindowProperties());
+
+        //rootWindow.getRootWindowProperties().getWindowBarProperties()
+
+        add(rootWindow, BorderLayout.CENTER);
+        loadComponents();
+    }
+
     private void addRightTab(View v){
-    	rightWindow.restore();
-        rightWindow.addTab(v);
+    	eastWindow.restore();
+        eastWindow.addTab(v);
     }
 
     private void addCenterTab(View view) {
@@ -251,7 +338,7 @@ public class PlatformShell extends AbstractShell {
     }
 
     private void addLeftTab(View view) {
-    	leftWindow.restore();
+    	westWindow.restore();
     	/*
         for(View doc: openExplorerViews){
             if(doc.getTitle().equalsIgnoreCase(view.getTitle()) ){
@@ -260,24 +347,23 @@ public class PlatformShell extends AbstractShell {
             }
         }*/
         //view.getViewProperties().getViewTitleBarProperties().setOrientation(ViewTitleBarProp)
-        leftWindow.addTab(view);
+        westWindow.addTab(view);
     }
 
     private void addBottomView(View view) {
-    	bottomWindow.restore();
+    	southWindow.restore();
         /*for(View doc: openOutputViews){
             if(doc.getTitle().equalsIgnoreCase(view.getTitle()) ){
                 doc.restore();
                 return;
             }
         }*/
-        bottomWindow.addTab(view);
+        southWindow.addTab(view);
     }
 
     @Override
     public void addViewComponent(Component viewComponent) {
-        Class type = viewComponent.getClass();
-        ViewComponent.Configuration conf = (ViewComponent.Configuration) type.getAnnotation(ViewComponent.Configuration.class);
+        ViewComponent.Configuration conf = getComponentConfiguration(viewComponent.getClass());
         View view = viewComponent.getView();
         
         // Assign view properties
@@ -292,13 +378,13 @@ public class PlatformShell extends AbstractShell {
             case CENTER:
                 addCenterTab(view);
                 break;
-            case BOTTOM:
+            case SOUTH:
                 addBottomView(view);
                 break;
-            case LEFT:
+            case WEST:
                 addLeftTab(view);
                 break;
-            case RIGHT:
+            case EAST:
                 addRightTab(view);
                 break;
         }

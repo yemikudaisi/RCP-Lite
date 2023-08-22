@@ -8,4 +8,10 @@ public interface Component {
     String getTitle();
     Icon getIcon();
     View getView();
+
+    /**
+     * Called when a component comes in to view.
+     * This allows the component to transfer focus to a child component
+     */
+    void setFocus();
 }
