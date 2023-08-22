@@ -3,18 +3,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.rcplite</groupId>
-    <artifactId>rcplite</artifactId>
+    <groupId>org.rapidj</groupId>
+    <artifactId>rapidj</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>RCP Lite</name>
+    <name>RapidJ</name>
     <url>https://github.com/yemikudaisi/RCP-Lite</url>
 
     <modules>
-        <module>rcplite-core</module>
-        <module>rcplite-windows</module>
-        <module>rcplite-api</module>
-        <module>rcplite-examples</module>
+        <module>rapidj-core</module>
+        <module>rapidj-windows</module>
+        <module>rapidj-api</module>
+        <module>rapidj-examples</module>
     </modules>
 
     <properties>
