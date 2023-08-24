@@ -87,4 +87,9 @@ public class LogComponent extends ViewComponent implements Logger {
 		logTextPane.setCharacterAttributes(aset, false);
 		logTextPane.replaceSelection(msg);
 	}
+
+	@Override
+	public void setFocus() {
+		this.logTextPane.requestFocus();
+	}
 }

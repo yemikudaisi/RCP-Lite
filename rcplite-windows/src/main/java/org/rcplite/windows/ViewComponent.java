@@ -1,14 +1,21 @@
 package org.rcplite.windows;
 
+import org.rcplite.windows.dock.DockGridLocation;
+
 import java.lang.annotation.*;
 
-public class ViewComponent extends AbstractComponent {
+public abstract class ViewComponent extends AbstractComponent {
+
+    public ViewComponent.Configuration getConfiguration(){
+        return (ViewComponent.Configuration) this.getClass()
+                .getAnnotation(ViewComponent.Configuration.class);
+    }
 
     @Documented
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Configuration{
-        ComponentPosition position() default ComponentPosition.CENTER;
+        int[] position() default {1,1};
         boolean openOnStart() default false;
         boolean closable() default true;
         boolean minimizable() default true;
