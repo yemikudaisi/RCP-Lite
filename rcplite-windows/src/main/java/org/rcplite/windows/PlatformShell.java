@@ -194,7 +194,6 @@ public class PlatformShell extends AbstractShell {
         //rootWindow.getRootWindowProperties().getWindowBarProperties()
 
         add(rootWindow, BorderLayout.CENTER);
-        loadComponents();
     }
     
 
@@ -215,44 +214,6 @@ public class PlatformShell extends AbstractShell {
     
     private float getOutputDividerLocation() {
     	return 1.0f - getConfiguration().getPreferredOutputWindowHeight();
-    }
-
-    Boolean centerComponentsExists,
-            westernComponentsExists,
-            southernComponentsExists,
-            easternComponentsExists;
-    private void loadComponents(){
-    	
-    	// FIXME Make window close when they don't have content -> working not tested
-    	// particularly at startup -> all efforts failed so far 
-    	
-        Iterator<Component> views = components.iterator();
-        while(views.hasNext()){
-            Component v = views.next();
-            if (v instanceof ViewComponent){
-                Class type = v.getClass();
-                ViewComponent.Configuration conf = (ViewComponent.Configuration) type.getAnnotation(ViewComponent.Configuration.class);
-                ViewComponent viewComponent = (ViewComponent) v;
-                
-                if(conf != null && conf.openOnStart()) {
-                    switch (conf.position()){
-                        case CENTER:
-                            centerComponentsExists = (!centerComponentsExists?true:false);
-                            break;
-                        case SOUTH:
-                            southernComponentsExists = (!centerComponentsExists?true:false);
-                            break;
-                        case WEST:
-                            westernComponentsExists = (!centerComponentsExists?true:false);
-                            break;
-                        case EAST:
-                            easternComponentsExists = (!easternComponentsExists?true:false);
-                            break;
-                    }
-                	addViewComponent(viewComponent);
-                }
-            }
-        }
     }
 
     private TabWindow createDefaultTabbedWindow(String name, TabWindowListener listener){
@@ -276,17 +237,7 @@ public class PlatformShell extends AbstractShell {
                 SOUTH_WINDOW_NAME,
                 WEST_WINDOW_NAME);
 
-        if (easternComponentsExists) {
-            eastWindow = createDefaultTabbedWindow(EAST_WINDOW_NAME, listener);
-        }
 
-        if(southernComponentsExists){
-            southWindow = createDefaultTabbedWindow(SOUTH_WINDOW_NAME, listener);
-        }
-
-        if(westernComponentsExists){
-            westWindow = createDefaultTabbedWindow(WEST_WINDOW_NAME, listener);
-        }
 
         centerWindow.getWindowProperties().setCloseEnabled(false);
         centerWindow.setName(PlatformShell.CENTER_WINDOW_NAME);
@@ -324,7 +275,6 @@ public class PlatformShell extends AbstractShell {
         //rootWindow.getRootWindowProperties().getWindowBarProperties()
 
         add(rootWindow, BorderLayout.CENTER);
-        loadComponents();
     }
 
     private void addRightTab(View v){
@@ -373,21 +323,7 @@ public class PlatformShell extends AbstractShell {
         view.getWindowProperties().setRestoreEnabled(conf.restorable());
         view.getWindowProperties().setDockEnabled(conf.dockable());
         view.getWindowProperties().setDragEnabled(conf.dragable());
-        
-        switch (conf.position()){
-            case CENTER:
-                addCenterTab(view);
-                break;
-            case SOUTH:
-                addBottomView(view);
-                break;
-            case WEST:
-                addLeftTab(view);
-                break;
-            case EAST:
-                addRightTab(view);
-                break;
-        }
+
     }
 
 

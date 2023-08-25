@@ -57,7 +57,7 @@ public class DockingManager {
      * components configuration}
      * @return The calculated dock grid size
      */
-    private DockGridSize calculateGridSize() {
+    public DockGridSize calculateGridSize() {
         if (this.components.isEmpty()) {
             return this.gridSize;
         }

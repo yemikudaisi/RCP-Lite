@@ -12,9 +12,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 @ViewComponent.Configuration(
-        position = ComponentPosition.CENTER
+        position = {0,1}
 )
 public class HtmlViewerComponent extends ViewComponent implements HtmlViewer {
+
+    JEditorPane jEditorPane;
 
 	private static final long serialVersionUID = 4334752276032716981L;
 	String htmlString = "<html>\n"
@@ -29,7 +31,7 @@ public class HtmlViewerComponent extends ViewComponent implements HtmlViewer {
         setTitle("HTML Viewer");
         setLayout(new BorderLayout());
         // create jeditorpane
-        JEditorPane jEditorPane = new JEditorPane();
+        jEditorPane = new JEditorPane();
 
         // make it read-only
         jEditorPane.setEditable(false);
@@ -66,5 +68,10 @@ public class HtmlViewerComponent extends ViewComponent implements HtmlViewer {
     @Override
     public void view(String content) {
         htmlString = content;
+    }
+
+    @Override
+    public void setFocus() {
+        this.jEditorPane.requestFocus();
     }
 }
